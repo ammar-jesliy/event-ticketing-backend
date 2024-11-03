@@ -1,4 +1,4 @@
 package lk.ac.iit.eventticketingbackend;
 
-public class Vendor {
+public class TicketPool {
 }
