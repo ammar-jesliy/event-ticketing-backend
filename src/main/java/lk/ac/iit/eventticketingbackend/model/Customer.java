@@ -11,13 +11,15 @@ public class Customer {
     private String name;
     @Indexed(unique = true)
     private String email;
+    private String password;
     private boolean isVip;
     private double discountRate;
     private int purchaseRate;
 
-    public Customer(String name, String email, boolean isVip, double discountRate, int purchaseRate) {
+    public Customer(String name, String email, String password, boolean isVip, double discountRate, int purchaseRate) {
         this.name = name;
         this.email = email;
+        this.password = password;
         this.isVip = isVip;
         this.discountRate = discountRate;
         this.purchaseRate = purchaseRate;
@@ -37,6 +39,14 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isVip() {
