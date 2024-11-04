@@ -26,4 +26,10 @@ public class CustomerController {
     public boolean checkEmail(@RequestParam String email) {
         return customerService.isEmailAvailable(email);
     }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/register")
+    public Customer registerCustomer(@RequestBody Customer customer) {
+        return customerService.registerCustomer(customer);
+    }
 }

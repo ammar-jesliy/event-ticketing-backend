@@ -22,4 +22,8 @@ public class CustomerService {
     public boolean isEmailAvailable(String email) {
         return !customerRepository.existsByEmail(email);
     }
+
+    public Customer registerCustomer(Customer customer) {
+        return customerRepository.save(customer);
+    }
 }

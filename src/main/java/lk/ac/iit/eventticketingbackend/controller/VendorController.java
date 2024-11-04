@@ -1,5 +1,6 @@
 package lk.ac.iit.eventticketingbackend.controller;
 
+import lk.ac.iit.eventticketingbackend.model.Customer;
 import lk.ac.iit.eventticketingbackend.model.Vendor;
 import lk.ac.iit.eventticketingbackend.service.VendorService;
 import org.springframework.web.bind.annotation.*;
@@ -24,5 +25,11 @@ public class VendorController {
     @GetMapping("/check-email")
     public boolean checkEmail(@RequestParam String email) {
         return vendorService.isEmailAvailable(email);
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/register")
+    public Vendor registerCustomer(@RequestBody Vendor vendor) {
+        return vendorService.registerVendor(vendor);
     }
 }
