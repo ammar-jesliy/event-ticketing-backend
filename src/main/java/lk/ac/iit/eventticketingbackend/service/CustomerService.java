@@ -18,4 +18,8 @@ public class CustomerService {
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
+
+    public boolean isEmailAvailable(String email) {
+        return !customerRepository.existsByEmail(email);
+    }
 }
