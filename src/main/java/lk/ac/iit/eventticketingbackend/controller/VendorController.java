@@ -1,8 +1,12 @@
 package lk.ac.iit.eventticketingbackend.controller;
 
 import lk.ac.iit.eventticketingbackend.model.Customer;
+import lk.ac.iit.eventticketingbackend.model.LoginRequest;
+import lk.ac.iit.eventticketingbackend.model.ResponseMessage;
 import lk.ac.iit.eventticketingbackend.model.Vendor;
 import lk.ac.iit.eventticketingbackend.service.VendorService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +33,18 @@ public class VendorController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/register")
-    public Vendor registerCustomer(@RequestBody Vendor vendor) {
+    public Vendor registerVendor(@RequestBody Vendor vendor) {
         return vendorService.registerVendor(vendor);
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/login")
+    public ResponseEntity<?> loginVendor(@RequestBody LoginRequest request) {
+        boolean authenticated = vendorService.authenticate(request.getEmail(), request.getPassword());
+        if (authenticated) {
+            return ResponseEntity.ok(new ResponseMessage("Vendor Login Successful!"));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("Invalid Credentials"));
+        }
     }
 }

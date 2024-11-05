@@ -27,4 +27,12 @@ public class VendorService {
     public Vendor registerVendor(Vendor vendor) {
         return vendorRepository.save(vendor);
     }
+
+    public boolean authenticate(String email, String password) {
+        Vendor vendor = vendorRepository.findVendorByEmail(email);
+        if (vendor != null) {
+            return vendor.getPassword().equals(password);
+        }
+        return false;
+    }
 }

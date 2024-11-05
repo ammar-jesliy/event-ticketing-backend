@@ -5,6 +5,7 @@ import lk.ac.iit.eventticketingbackend.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CustomerService {
@@ -25,5 +26,13 @@ public class CustomerService {
 
     public Customer registerCustomer(Customer customer) {
         return customerRepository.save(customer);
+    }
+
+    public boolean authenticate(String email, String password) {
+        Customer customer = customerRepository.findCustomerByEmail(email);
+        if (customer != null) {
+            return customer.getPassword().equals(password);
+        }
+        return false;
     }
 }
