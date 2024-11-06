@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/customers")
@@ -42,7 +44,12 @@ public class CustomerController {
     public ResponseEntity<?> loginCustomer(@RequestBody LoginRequest request) {
         boolean authenticated = customerService.authenticate(request.getEmail(), request.getPassword());
         if (authenticated) {
-            return ResponseEntity.ok(new ResponseMessage("Customer Login Successful!"));
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("auth", true);
+            response.put("role", "customer");
+
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("Invalid Credentials"));
         }
