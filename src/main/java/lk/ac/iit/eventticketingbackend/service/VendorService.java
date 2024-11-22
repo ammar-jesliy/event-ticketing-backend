@@ -1,6 +1,5 @@
 package lk.ac.iit.eventticketingbackend.service;
 
-import lk.ac.iit.eventticketingbackend.model.Customer;
 import lk.ac.iit.eventticketingbackend.model.Vendor;
 import lk.ac.iit.eventticketingbackend.repository.VendorRepository;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,18 @@ public class VendorService {
             return vendor.getPassword().equals(password);
         }
         return false;
+    }
+
+    public Vendor updateVendorProfile(Vendor vendor) {
+        Vendor existingVendor = vendorRepository.findVendorByEmail(vendor.getEmail());
+
+        existingVendor.setName(vendor.getName());
+        existingVendor.setEmail(vendor.getEmail());
+        existingVendor.setPassword(vendor.getPassword());
+        existingVendor.setReleaseRate(vendor.getReleaseRate());
+
+        return vendorRepository.save(existingVendor);
+
     }
 
     public Vendor getVendorByEmail(String email){
