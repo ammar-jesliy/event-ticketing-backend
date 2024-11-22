@@ -44,12 +44,7 @@ public class CustomerController {
     public ResponseEntity<?> loginCustomer(@RequestBody LoginRequest request) {
         boolean authenticated = customerService.authenticate(request.getEmail(), request.getPassword());
         if (authenticated) {
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("auth", true);
-            response.put("role", "customer");
-
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(customerService.getCustomerByEmail(request.getEmail()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("Invalid Credentials"));
         }

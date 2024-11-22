@@ -35,4 +35,8 @@ public class VendorService {
         }
         return false;
     }
+
+    public Vendor getVendorByEmail(String email){
+        return vendorRepository.findVendorByEmail(email);
+    }
 }

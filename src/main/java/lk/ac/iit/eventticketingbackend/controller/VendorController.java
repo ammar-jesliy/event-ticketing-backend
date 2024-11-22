@@ -44,12 +44,7 @@ public class VendorController {
     public ResponseEntity<?> loginVendor(@RequestBody LoginRequest request) {
         boolean authenticated = vendorService.authenticate(request.getEmail(), request.getPassword());
         if (authenticated) {
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("auth", true);
-            response.put("role", "vendor");
-
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(vendorService.getVendorByEmail(request.getEmail()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("Invalid Credentials"));
         }
