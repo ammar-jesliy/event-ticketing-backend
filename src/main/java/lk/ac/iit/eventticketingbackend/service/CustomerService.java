@@ -1,6 +1,7 @@
 package lk.ac.iit.eventticketingbackend.service;
 
 import lk.ac.iit.eventticketingbackend.model.Customer;
+import lk.ac.iit.eventticketingbackend.model.Vendor;
 import lk.ac.iit.eventticketingbackend.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,20 @@ public class CustomerService {
             return customer.getPassword().equals(password);
         }
         return false;
+    }
+
+    public Customer updateCustomerProfile(Customer customer) {
+        Customer existingCustomer = customerRepository.findCustomerByEmail(customer.getEmail());
+
+        existingCustomer.setName(customer.getName());
+        existingCustomer.setEmail(customer.getEmail());
+        existingCustomer.setPassword(customer.getPassword());
+        existingCustomer.setPurchaseRate(customer.getPurchaseRate());
+        existingCustomer.setVip(customer.isVip());
+        existingCustomer.setDiscountRate(customer.getDiscountRate());
+
+        return customerRepository.save(existingCustomer);
+
     }
 
     public Customer getCustomerByEmail(String email){
