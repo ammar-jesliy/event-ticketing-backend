@@ -1,4 +1,4 @@
-package lk.ac.iit.eventticketingbackend.model;
+package lk.ac.iit.eventticketingbackend.dto;
 
 public class LoginRequest {
     private String email;

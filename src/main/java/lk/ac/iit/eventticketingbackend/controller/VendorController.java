@@ -1,7 +1,7 @@
 package lk.ac.iit.eventticketingbackend.controller;
 
-import lk.ac.iit.eventticketingbackend.model.LoginRequest;
-import lk.ac.iit.eventticketingbackend.model.ResponseMessage;
+import lk.ac.iit.eventticketingbackend.dto.LoginRequest;
+import lk.ac.iit.eventticketingbackend.dto.ResponseMessage;
 import lk.ac.iit.eventticketingbackend.model.Vendor;
 import lk.ac.iit.eventticketingbackend.service.VendorService;
 import org.springframework.http.HttpStatus;
