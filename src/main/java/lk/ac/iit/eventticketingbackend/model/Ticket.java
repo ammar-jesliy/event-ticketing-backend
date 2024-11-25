@@ -9,34 +9,47 @@ import java.time.LocalDateTime;
 public class Ticket {
     @Id
     private String id;
-    private String eventName;
-    private LocalDateTime eventDate;
+    private String ticketNumber;
+    private String eventId; // Did not use DBRef to reduce memory usage
+    private String customerId; // Did not use DBRef to reduce memory usage
+    private String vendorId; // Did not use DBRef to reduce memory usage
     private double price;
     private boolean isAvailable;
-    private String vendorId;
+    private String purchasedDate;
 
-    public Ticket(String eventName, LocalDateTime eventDate, double price, boolean isAvailable, String vendorId) {
-        this.eventName = eventName;
-        this.eventDate = eventDate;
-        this.price = price;
-        this.isAvailable = isAvailable;
+    public Ticket() {
+    }
+
+    public String getTicketNumber() {
+        return ticketNumber;
+    }
+
+    public void setTicketNumber(String ticketNumber) {
+        this.ticketNumber = ticketNumber;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(String vendorId) {
         this.vendorId = vendorId;
-    }
-
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public LocalDateTime getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(LocalDateTime eventDate) {
-        this.eventDate = eventDate;
     }
 
     public double getPrice() {
@@ -55,11 +68,11 @@ public class Ticket {
         isAvailable = available;
     }
 
-    public String getVendorId() {
-        return vendorId;
+    public String getPurchasedDate() {
+        return purchasedDate;
     }
 
-    public void setVendorId(String vendorId) {
-        this.vendorId = vendorId;
+    public void setPurchasedDate(String purchasedDate) {
+        this.purchasedDate = purchasedDate;
     }
 }
