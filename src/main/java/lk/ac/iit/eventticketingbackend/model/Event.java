@@ -1,7 +1,6 @@
 package lk.ac.iit.eventticketingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lk.ac.iit.eventticketingbackend.enums.EventStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,9 +15,10 @@ public class Event {
     private String name;
     private String description;
     private LocalDateTime date;
+    private LocalDateTime openDate;
+    private LocalDateTime closeDate;
     private String location;
     private int maxCapacity;
-    private EventStatus status;
     @DBRef
     private TicketPool ticketPool;
 
@@ -65,19 +65,27 @@ public class Event {
         this.maxCapacity = maxCapacity;
     }
 
-    public EventStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(EventStatus status) {
-        this.status = status;
-    }
-
     public TicketPool getTicketPool() {
         return ticketPool;
     }
 
     public void setTicketPool(TicketPool ticketPool) {
         this.ticketPool = ticketPool;
+    }
+
+    public LocalDateTime getOpenDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(LocalDateTime openDate) {
+        this.openDate = openDate;
+    }
+
+    public LocalDateTime getCloseDate() {
+        return closeDate;
+    }
+
+    public void setCloseDate(LocalDateTime closeDate) {
+        this.closeDate = closeDate;
     }
 }
