@@ -14,6 +14,7 @@ public class TicketPool {
     @JsonProperty("id")
     private String id;
     private String eventId;
+    private int maxTicketCapacity;
     private int totalTickets;
     private int ticketSold;
     private int availableTickets;
@@ -29,6 +30,14 @@ public class TicketPool {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getMaxTicketCapacity() {
+        return maxTicketCapacity;
+    }
+
+    public void setMaxTicketCapacity(int maxTicketCapacity) {
+        this.maxTicketCapacity = maxTicketCapacity;
     }
 
     public int getTicketSold() {

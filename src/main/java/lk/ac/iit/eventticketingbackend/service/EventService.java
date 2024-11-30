@@ -30,6 +30,7 @@ public class EventService {
         // Create new ticket pool for the event
         TicketPool ticketPool = new TicketPool();
         ticketPool.setEventId(savedEvent.getId());
+        ticketPool.setMaxTicketCapacity(savedEvent.getMaxCapacity());
         ticketPool.setTotalTickets(0);
         ticketPool.setTicketSold(0);
 
