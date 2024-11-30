@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -15,15 +17,26 @@ public class TicketPool {
     private String id;
     private String eventId;
     private int maxTicketCapacity;
-    private int totalTickets;
-    private int ticketSold;
-    private int availableTickets;
-    private Queue<Ticket> tickets;
+    private int totalTickets; // The amount of tickets in the ticket pool, sold and unsold
+    private int ticketSold; // The amount of tickets sold
+    private int availableTickets; // The amount of tickets available for sale
+    private List<Ticket> tickets;
 
     public TicketPool() {
-        this.tickets = new ConcurrentLinkedQueue<>();
+        this.tickets = new ArrayList<>();
     }
 
+    // Add a ticket to the pool (Vendor's operation)
+    public synchronized boolean addTicket(Ticket ticket) {
+        if (tickets.size() < maxTicketCapacity) {
+            tickets.add(ticket);
+            return true;
+        }
+        return false; // Cannot add ticket, capacity is full
+    }
+
+
+    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -73,11 +86,11 @@ public class TicketPool {
     }
 
 
-    public Queue<Ticket> getTickets() {
+    public List<Ticket> getTickets() {
         return tickets;
     }
 
-    public void setTickets(Queue<Ticket> tickets) {
+    public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
 }
