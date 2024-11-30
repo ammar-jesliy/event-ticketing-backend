@@ -14,17 +14,17 @@ public class Customer {
     @Indexed(unique = true)
     private String email;
     private String password;
-    private boolean isVip;
+    private int vipPoints;
     private double discountRate;
     private int purchaseRate;
 
-    public Customer(String name, String email, String password, boolean isVip, double discountRate, int purchaseRate) {
+    public Customer(String name, String email, String password, double discountRate, int purchaseRate) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.isVip = isVip;
         this.discountRate = discountRate;
         this.purchaseRate = purchaseRate;
+        this.vipPoints = 0;
     }
 
     public String getName() {
@@ -51,12 +51,12 @@ public class Customer {
         this.password = password;
     }
 
-    public boolean isVip() {
-        return isVip;
+    public int getVipPoints() {
+        return vipPoints;
     }
 
-    public void setVip(boolean vip) {
-        isVip = vip;
+    public void setVipPoints(int vipPoints) {
+        this.vipPoints = vipPoints;
     }
 
     public double getDiscountRate() {

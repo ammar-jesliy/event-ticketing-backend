@@ -44,7 +44,7 @@ public class CustomerService {
         existingCustomer.setEmail(customer.getEmail());
         existingCustomer.setPassword(customer.getPassword());
         existingCustomer.setPurchaseRate(customer.getPurchaseRate());
-        existingCustomer.setVip(customer.isVip());
+        existingCustomer.setVipPoints(customer.getVipPoints());
         existingCustomer.setDiscountRate(customer.getDiscountRate());
 
         return customerRepository.save(existingCustomer);
