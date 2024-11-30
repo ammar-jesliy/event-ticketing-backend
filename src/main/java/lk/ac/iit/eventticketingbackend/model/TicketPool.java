@@ -13,24 +13,38 @@ public class TicketPool {
     @Id
     @JsonProperty("id")
     private String id;
-    @DBRef
-    private Event event;
+    private String eventId;
     private int totalTickets;
+    private int ticketSold;
     private int availableTickets;
     private Queue<Ticket> tickets;
 
-    public TicketPool(Event event, int totalTickets) {
-        this.event = event;
-        this.totalTickets = totalTickets;
+    public TicketPool() {
         this.tickets = new ConcurrentLinkedQueue<>();
     }
 
-    public Event getEvent() {
-        return event;
+    public String getId() {
+        return id;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getTicketSold() {
+        return ticketSold;
+    }
+
+    public void setTicketSold(int ticketSold) {
+        this.ticketSold = ticketSold;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 
     public int getTotalTickets() {

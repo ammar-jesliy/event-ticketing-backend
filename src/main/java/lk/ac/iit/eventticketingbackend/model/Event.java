@@ -19,10 +19,17 @@ public class Event {
     private LocalDateTime closeDate;
     private String location;
     private int maxCapacity;
-    @DBRef
-    private TicketPool ticketPool;
+    private String ticketPoolId;
 
     public Event() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -65,12 +72,12 @@ public class Event {
         this.maxCapacity = maxCapacity;
     }
 
-    public TicketPool getTicketPool() {
-        return ticketPool;
+    public String getTicketPoolId() {
+        return ticketPoolId;
     }
 
-    public void setTicketPool(TicketPool ticketPool) {
-        this.ticketPool = ticketPool;
+    public void setTicketPoolId(String ticketPoolId) {
+        this.ticketPoolId = ticketPoolId;
     }
 
     public LocalDateTime getOpenDate() {
