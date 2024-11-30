@@ -2,6 +2,8 @@ package lk.ac.iit.eventticketingbackend.controller;
 
 import lk.ac.iit.eventticketingbackend.dto.LoginRequest;
 import lk.ac.iit.eventticketingbackend.dto.ResponseMessage;
+import lk.ac.iit.eventticketingbackend.dto.TicketReleaseRequest;
+import lk.ac.iit.eventticketingbackend.model.TicketPool;
 import lk.ac.iit.eventticketingbackend.model.Vendor;
 import lk.ac.iit.eventticketingbackend.service.VendorService;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Locale;
 
 
 @RestController
@@ -49,6 +52,30 @@ public class VendorController {
         }
     }
 
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/release-tickets")
+    public ResponseEntity<String> releaseTickets(@RequestBody TicketReleaseRequest request) {
+        System.out.println("Release tickets running");
+        try {
+            boolean success = vendorService.releaseTicket(
+                    request.getEventId(),
+                    request.getVendorId(),
+                    request.getNumberOfTickets(),
+                    request.getPrice()
+            );
+
+            if (success) {
+                return new ResponseEntity<>("Tickets successfully released", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Ticket pool has reached its maximum capacity", HttpStatus.BAD_REQUEST);
+            }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Event not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error releasing tickets", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping("/update-profile")
