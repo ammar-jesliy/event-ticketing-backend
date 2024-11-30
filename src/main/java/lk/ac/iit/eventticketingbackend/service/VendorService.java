@@ -2,12 +2,16 @@ package lk.ac.iit.eventticketingbackend.service;
 
 import lk.ac.iit.eventticketingbackend.model.Ticket;
 import lk.ac.iit.eventticketingbackend.model.TicketPool;
+import lk.ac.iit.eventticketingbackend.model.Transaction;
 import lk.ac.iit.eventticketingbackend.model.Vendor;
 import lk.ac.iit.eventticketingbackend.repository.TicketPoolRepository;
 import lk.ac.iit.eventticketingbackend.repository.TicketRepository;
+import lk.ac.iit.eventticketingbackend.repository.TransactionRepository;
 import lk.ac.iit.eventticketingbackend.repository.VendorRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,11 +20,13 @@ public class VendorService {
     private final VendorRepository vendorRepository;
     private final TicketPoolRepository ticketPoolRepository;
     private final TicketRepository ticketRepository;
+    private final TransactionRepository transactionRepository;
 
-    public VendorService(VendorRepository vendorRepository, TicketPoolRepository ticketPoolRepository, TicketRepository ticketRepository) {
+    public VendorService(VendorRepository vendorRepository, TicketPoolRepository ticketPoolRepository, TicketRepository ticketRepository, TransactionRepository transactionRepository) {
         this.vendorRepository = vendorRepository;
         this.ticketPoolRepository = ticketPoolRepository;
         this.ticketRepository = ticketRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     public List<Vendor> getAllVendors() {
@@ -72,6 +78,9 @@ public class VendorService {
             return false;
         }
 
+        // Initialize list for ticket IDs
+        List<String> ticketIds = new ArrayList<>();
+
         // Create and add tickets to the pool
         for (int i = 0; i < numberOfTickets; i++) {
             Ticket ticket = new Ticket();
@@ -87,7 +96,21 @@ public class VendorService {
 
             // Save ticket in repository
             ticketRepository.save(ticket);
+
+            ticketIds.add(ticket.getId());
         }
+
+        // Create and store transaction details
+        Transaction transaction = new Transaction();
+        transaction.setVendorId(vendorId);
+        transaction.setEventId(eventId);
+        transaction.setTicketIds(ticketIds);
+        transaction.setTransactionType("RELEASE");
+        transaction.setPricePerTicket(price);
+        transaction.setQuantity(numberOfTickets);
+        transaction.setTimeStamp(LocalDateTime.now());
+
+        transactionRepository.save(transaction);
 
         // Set total available tickets for sale and total tickets used in the ticket pool
         ticketPool.setTotalTickets(ticketPool.getTotalTickets() + numberOfTickets);
