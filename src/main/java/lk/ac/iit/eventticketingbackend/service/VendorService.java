@@ -4,6 +4,7 @@ import lk.ac.iit.eventticketingbackend.model.Ticket;
 import lk.ac.iit.eventticketingbackend.model.TicketPool;
 import lk.ac.iit.eventticketingbackend.model.Vendor;
 import lk.ac.iit.eventticketingbackend.repository.TicketPoolRepository;
+import lk.ac.iit.eventticketingbackend.repository.TicketRepository;
 import lk.ac.iit.eventticketingbackend.repository.VendorRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,12 @@ public class VendorService {
 
     private final VendorRepository vendorRepository;
     private final TicketPoolRepository ticketPoolRepository;
+    private final TicketRepository ticketRepository;
 
-    public VendorService(VendorRepository vendorRepository, TicketPoolRepository ticketPoolRepository) {
+    public VendorService(VendorRepository vendorRepository, TicketPoolRepository ticketPoolRepository, TicketRepository ticketRepository) {
         this.vendorRepository = vendorRepository;
         this.ticketPoolRepository = ticketPoolRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     public List<Vendor> getAllVendors() {
@@ -52,7 +55,7 @@ public class VendorService {
 
     }
 
-    public Vendor getVendorByEmail(String email){
+    public Vendor getVendorByEmail(String email) {
         return vendorRepository.findVendorByEmail(email);
     }
 
@@ -78,10 +81,12 @@ public class VendorService {
             ticket.setAvailable(true);
 
             boolean success = ticketPool.addTicket(ticket);
-
             if (!success) {
                 return false;
             }
+
+            // Save ticket in repository
+            ticketRepository.save(ticket);
         }
 
         // Set total available tickets for sale and total tickets used in the ticket pool
