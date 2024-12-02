@@ -55,7 +55,7 @@ public class VendorController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/release-tickets")
-    public ResponseEntity<String> releaseTickets(@RequestBody TicketReleaseRequest request) {
+    public ResponseEntity<?> releaseTickets(@RequestBody TicketReleaseRequest request) {
         System.out.println("Release tickets running");
         try {
             boolean success = vendorService.releaseTicket(
@@ -66,7 +66,7 @@ public class VendorController {
             );
 
             if (success) {
-                return new ResponseEntity<>("Tickets successfully released", HttpStatus.OK);
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Tickets successfully released"));
             } else {
                 return new ResponseEntity<>("Ticket pool has reached its maximum capacity", HttpStatus.BAD_REQUEST);
             }
