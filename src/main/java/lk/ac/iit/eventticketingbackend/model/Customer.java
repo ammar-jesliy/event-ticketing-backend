@@ -18,6 +18,9 @@ public class Customer {
     private double discountRate;
     private int purchaseRate;
 
+    public Customer() {
+    }
+
     public Customer(String name, String email, String password, double discountRate, int purchaseRate) {
         this.name = name;
         this.email = email;
@@ -73,5 +76,18 @@ public class Customer {
 
     public void setPurchaseRate(int purchaseRate) {
         this.purchaseRate = purchaseRate;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", vipPoints=" + vipPoints +
+                ", discountRate=" + discountRate +
+                ", purchaseRate=" + purchaseRate +
+                '}';
     }
 }

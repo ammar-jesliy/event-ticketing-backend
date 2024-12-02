@@ -16,6 +16,9 @@ public class Vendor {
     private String password;
     private int releaseRate;
 
+    public Vendor() {
+    }
+
     public Vendor(String name, String email, String password, int releaseRate) {
         this.name = name;
         this.email = email;
@@ -53,5 +56,16 @@ public class Vendor {
 
     public void setReleaseRate(int releaseRate) {
         this.releaseRate = releaseRate;
+    }
+
+    @Override
+    public String toString() {
+        return "Vendor{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", releaseRate=" + releaseRate +
+                '}';
     }
 }
