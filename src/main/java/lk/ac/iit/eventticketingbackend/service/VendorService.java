@@ -122,10 +122,6 @@ public class VendorService {
 
         transactionRepository.save(transaction);
 
-        // Set total available tickets for sale and total tickets used in the ticket pool
-        ticketPool.setTotalTickets(ticketPool.getTotalTickets() + numberOfTickets);
-        ticketPool.setAvailableTickets(ticketPool.getAvailableTickets() + numberOfTickets);
-
         ticketPoolRepository.save(ticketPool);
 
         return true;

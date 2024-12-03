@@ -29,8 +29,10 @@ public class TicketPool {
 
     // Add a ticket to the pool (Vendor's operation)
     public synchronized boolean addTicket(Ticket ticket) {
-        if (tickets.size() < maxTicketCapacity) {
+        if (totalTickets < maxTicketCapacity) {
             tickets.add(ticket);
+            this.totalTickets++;
+            this.availableTickets++;
             return true;
         }
         return false; // Cannot add ticket, capacity is full
