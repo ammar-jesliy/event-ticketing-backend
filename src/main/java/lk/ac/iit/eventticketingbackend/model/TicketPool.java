@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -23,7 +24,7 @@ public class TicketPool {
     private List<Ticket> tickets;
 
     public TicketPool() {
-        this.tickets = new ArrayList<>();
+        this.tickets = Collections.synchronizedList(new ArrayList<>());
     }
 
     // Add a ticket to the pool (Vendor's operation)
