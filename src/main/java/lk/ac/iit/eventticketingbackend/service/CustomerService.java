@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -19,6 +20,15 @@ public class CustomerService {
 
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
+    }
+
+    // Fetch customers created for simulation
+    public List<Customer> getSimulationCustomers(int limit) {
+        List<Customer> allCustomers = customerRepository.findAll();
+        return allCustomers.stream()
+                .filter(customer -> customer.getName().startsWith("customer"))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     public boolean isEmailAvailable(String email) {

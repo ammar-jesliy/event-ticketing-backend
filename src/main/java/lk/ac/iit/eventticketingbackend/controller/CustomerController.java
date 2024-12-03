@@ -25,6 +25,11 @@ public class CustomerController {
         return customerService.getAllCustomers();
     }
 
+    @GetMapping("/simulation")
+    public List<Customer> fetchSimulationCustomers(@RequestParam(defaultValue = "5") int limit) {
+        return customerService.getSimulationCustomers(limit);
+    }
+
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/check-email")
     public boolean checkEmail(@RequestParam String email) {

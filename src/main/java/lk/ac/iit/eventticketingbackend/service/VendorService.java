@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VendorService {
@@ -31,6 +32,15 @@ public class VendorService {
 
     public List<Vendor> getAllVendors() {
         return vendorRepository.findAll();
+    }
+
+    // Fetch vendors created for simulation
+    public List<Vendor> getSimulationVendors(int limit) {
+        List<Vendor> allVendors = vendorRepository.findAll();
+        return allVendors.stream()
+                .filter(vendor -> vendor.getName().startsWith("vendor"))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     public boolean isEmailAvailable(String email) {
