@@ -38,7 +38,7 @@ public class TicketPool {
         return false; // Cannot add ticket, capacity is full
     }
 
-    public synchronized Ticket sellTicket(String customerId) {
+    public synchronized Ticket buyTicket(String customerId) {
         if (ticketSold == maxTicketCapacity) {
             throw new IllegalStateException("No tickets available for sale");
         } else if (availableTickets == 0) {

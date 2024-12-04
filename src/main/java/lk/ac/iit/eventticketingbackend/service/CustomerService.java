@@ -96,7 +96,7 @@ public class CustomerService {
         double totalAmount = 0;
 
         for (int i = 0; i < numberOfTickets; i++) {
-            Ticket soldTicket = ticketPool.sellTicket(customerId);
+            Ticket soldTicket = ticketPool.buyTicket(customerId);
 
             ticketRepository.save(soldTicket);
 
