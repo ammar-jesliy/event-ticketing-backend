@@ -12,7 +12,7 @@ public class Transaction {
     private String id;
     private LocalDateTime timeStamp;
     private List<String> ticketIds;
-    private String CustomerId;
+    private String customerId;
     private String vendorId;
     private String eventId;
     private int quantity;
@@ -48,11 +48,11 @@ public class Transaction {
     }
 
     public String getCustomerId() {
-        return CustomerId;
+        return customerId;
     }
 
     public void setCustomerId(String customerId) {
-        CustomerId = customerId;
+        this.customerId = customerId;
     }
 
     public String getVendorId() {
