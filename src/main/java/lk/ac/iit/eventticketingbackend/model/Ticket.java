@@ -15,7 +15,7 @@ public class Ticket {
     private String vendorId; // Did not use DBRef to reduce memory usage
     private double price;
     private boolean isAvailable;
-    private String purchasedDate;
+    private LocalDateTime purchasedDate;
 
     public Ticket() {
     }
@@ -76,11 +76,11 @@ public class Ticket {
         isAvailable = available;
     }
 
-    public String getPurchasedDate() {
+    public LocalDateTime getPurchasedDate() {
         return purchasedDate;
     }
 
-    public void setPurchasedDate(String purchasedDate) {
+    public void setPurchasedDate(LocalDateTime purchasedDate) {
         this.purchasedDate = purchasedDate;
     }
 }
