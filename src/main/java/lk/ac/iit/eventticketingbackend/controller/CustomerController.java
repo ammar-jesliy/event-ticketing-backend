@@ -69,7 +69,7 @@ public class CustomerController {
         System.out.println("Buy Tickets Running...");
 
         try {
-            List<Ticket> boughtTickets = customerService.buyTicket(request.getEventId(), request.getEventId(), request.getNumberOfTickets());
+            List<Ticket> boughtTickets = customerService.buyTicket(request.getEventId(), request.getCustomerId(), request.getNumberOfTickets());
 
             return ResponseEntity.ok().body(Map.of(
                     "message", "Ticket sold Successfully",
