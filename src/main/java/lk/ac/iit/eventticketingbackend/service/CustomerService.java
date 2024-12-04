@@ -8,9 +8,7 @@ import lk.ac.iit.eventticketingbackend.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,10 +88,7 @@ public class CustomerService {
         List<Ticket> soldTickets = new ArrayList<>();
 
         // Initialize list for ticket IDs
-        List<String> ticketIds = new ArrayList<>();
-
-        // Initialize variable to store total amount
-        double totalAmount = 0;
+        Map<String, List<Ticket>> ticketsByVendor = new HashMap<>();
 
         for (int i = 0; i < numberOfTickets; i++) {
             Ticket soldTicket = ticketPool.buyTicket(customerId);
@@ -102,25 +97,46 @@ public class CustomerService {
 
             soldTickets.add(soldTicket);
 
-            ticketIds.add(soldTicket.getId());
-            totalAmount += soldTicket.getPrice();
+            // Group Tickets by vendorId
+            ticketsByVendor.computeIfAbsent(soldTicket.getVendorId(), k -> new ArrayList<>()).add(soldTicket);
         }
 
         // Save the update Ticket pool
         ticketPoolRepository.save(ticketPool);
 
 
-        // Log the transaction
-        Transaction transaction = new Transaction();
-        transaction.setEventId(eventId);
-        transaction.setCustomerId(customerId);
-        transaction.setTicketIds(ticketIds);
-        transaction.setQuantity(numberOfTickets);
-        transaction.setTotalAmount(totalAmount);
-        transaction.setTransactionType("PURCHASE");
-        transaction.setTimeStamp(LocalDateTime.now());
+        // Process Transactions for each vendor
+        for (Map.Entry<String, List<Ticket>> entry : ticketsByVendor.entrySet()) {
 
-        transactionRepository.save(transaction);
+            String vendorId = entry.getKey();
+            List<Ticket> vendorTickets = entry.getValue();
+
+            // Collect ticket Ids and calculate total amount
+            List<String> ticketIds = vendorTickets.stream()
+                    .map(Ticket::getId)
+                    .collect(Collectors.toList());
+
+            double totalAmount = vendorTickets.stream()
+                    .mapToDouble(Ticket::getPrice)
+                    .sum();
+
+
+
+            // Log the transaction for current vendor
+            Transaction transaction = new Transaction();
+            transaction.setEventId(eventId);
+            transaction.setCustomerId(customerId);
+            transaction.setVendorId(vendorId);
+            transaction.setTicketIds(ticketIds);
+            transaction.setQuantity(vendorTickets.size());
+            transaction.setPricePerTicket(totalAmount / vendorTickets.size());
+            transaction.setTotalAmount(totalAmount);
+            transaction.setTransactionType("PURCHASE");
+            transaction.setTimeStamp(LocalDateTime.now());
+
+            transactionRepository.save(transaction);
+
+        }
 
         return soldTickets;
 
