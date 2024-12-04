@@ -1,14 +1,17 @@
 package lk.ac.iit.eventticketingbackend.controller;
 
+import lk.ac.iit.eventticketingbackend.dto.TicketBuyRequest;
 import lk.ac.iit.eventticketingbackend.model.Customer;
 import lk.ac.iit.eventticketingbackend.dto.LoginRequest;
 import lk.ac.iit.eventticketingbackend.dto.ResponseMessage;
+import lk.ac.iit.eventticketingbackend.model.Ticket;
 import lk.ac.iit.eventticketingbackend.service.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/customers")
@@ -58,5 +61,37 @@ public class CustomerController {
     public ResponseEntity<Customer> updateCustomerProfile(@RequestBody Customer customer) {
         Customer updatedCustomer = customerService.updateCustomerProfile(customer);
         return ResponseEntity.ok(updatedCustomer);
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/buy-tickets")
+    public ResponseEntity<?> buyTicket(@RequestBody TicketBuyRequest request) {
+        System.out.println("Buy Tickets Running...");
+
+        try {
+            List<Ticket> boughtTickets = customerService.buyTicket(request.getEventId(), request.getEventId(), request.getNumberOfTickets());
+
+            return ResponseEntity.ok().body(Map.of(
+                    "message", "Ticket sold Successfully",
+                    "tickets", boughtTickets
+            ));
+        } catch (IllegalArgumentException e) {
+            // Handle invalid event IDs or other validation errors
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                    "error", e.getMessage()
+            ));
+        } catch (IllegalStateException e) {
+            // Handle insufficient tickets or other logical issues
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                    "error", e.getMessage()
+            ));
+        } catch (Exception e) {
+            // Handle any unexpected errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "error", "An unexpected error occurred: " + e.getMessage()
+            ));
+        }
+
+
     }
 }

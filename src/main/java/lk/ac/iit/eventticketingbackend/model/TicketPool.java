@@ -5,10 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Queue;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Document
@@ -30,12 +28,52 @@ public class TicketPool {
     // Add a ticket to the pool (Vendor's operation)
     public synchronized boolean addTicket(Ticket ticket) {
         if (totalTickets < maxTicketCapacity) {
-            tickets.add(ticket);
+            boolean success = tickets.add(ticket);
             this.totalTickets++;
             this.availableTickets++;
+
+            System.out.println(Thread.currentThread().getName() + " has added a ticket to the pool. Total tickets available in the ticket pool is " + tickets.size());
             return true;
         }
         return false; // Cannot add ticket, capacity is full
+    }
+
+    public synchronized Ticket sellTicket(String customerId) {
+        if (ticketSold == maxTicketCapacity) {
+            throw new IllegalStateException("No tickets available for sale");
+        } else if (availableTickets == 0) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+
+        // Sort tickets by price (lowest price first)
+        tickets.sort(Comparator.comparingDouble(Ticket::getPrice));
+
+        Ticket ticket = tickets.get(0);
+
+        // Mark ticket as sold and assign it to the customer
+        ticket.setAvailable(false);
+        ticket.setCustomerId(customerId);
+
+        // Set ticket number
+        ticket.setTicketNumber("TICKET - " + ticket.getId());
+
+        // Set purchased data and time to now
+        ticket.setPurchasedDate(LocalDateTime.now());
+
+        // Remove ticket and update count variables
+        tickets.remove(0);
+        availableTickets--;
+        ticketSold++;
+
+        System.out.println(Thread.currentThread().getName() + " has bought a ticket from the pool. Total tickets available in the ticket pool is " + tickets.size());
+
+        notifyAll();
+
+        return ticket;
     }
 
 
