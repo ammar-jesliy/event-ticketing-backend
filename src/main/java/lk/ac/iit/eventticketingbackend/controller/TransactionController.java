@@ -26,7 +26,7 @@ public class TransactionController {
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
-    @GetMapping("/{vendorId}")
+    @GetMapping("/vendor/{vendorId}")
     public ResponseEntity<?> getVendorTransactions(@PathVariable String vendorId) {
         try {
             List<Transaction> transactions = transactionService.getVendorTransactions(vendorId);
