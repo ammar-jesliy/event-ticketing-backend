@@ -30,6 +30,10 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
+    public Customer getCustomerById(String customerId) {
+        return customerRepository.findCustomerById(customerId);
+    }
+
     // Fetch customers created for simulation
     public List<Customer> getSimulationCustomers(int limit) {
         List<Customer> allCustomers = customerRepository.findAll();

@@ -28,6 +28,12 @@ public class CustomerController {
         return customerService.getAllCustomers();
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/{customerId}")
+    public Customer fetchCustomerById(@PathVariable String customerId) {
+        return customerService.getCustomerById(customerId);
+    }
+
     @GetMapping("/simulation")
     public List<Customer> fetchSimulationCustomers(@RequestParam(defaultValue = "5") int limit) {
         return customerService.getSimulationCustomers(limit);
