@@ -46,4 +46,25 @@ public class TransactionController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<?> getCustomerTransactions(@PathVariable String customerId) {
+        try {
+            List<Transaction> transactions = transactionService.getCustomerTransactions(customerId);
+
+            if (transactions.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                        "message", "No transactions found for customerId: " + customerId
+                ));
+            }
+
+            return ResponseEntity.ok().body(transactions);
+        } catch (Exception e) {
+            // Handle unexpected errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "error", "An error occurred while retrieving transactions: " + e.getMessage()
+            ));
+        }
+    }
+
 }

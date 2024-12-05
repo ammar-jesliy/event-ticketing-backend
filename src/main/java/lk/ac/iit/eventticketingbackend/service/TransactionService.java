@@ -21,4 +21,10 @@ public class TransactionService {
     public List<Transaction> getVendorTransactions(String vendorId) {
         return transactionRepository.findTransactionsByVendorId(vendorId);
     }
+
+    public List<Transaction> getCustomerTransactions(String customerId) {
+        return transactionRepository.findTransactionsByCustomerId(customerId);
+    }
+
+
 }
