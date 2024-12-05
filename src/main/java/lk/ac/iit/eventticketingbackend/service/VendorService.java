@@ -34,6 +34,10 @@ public class VendorService {
         return vendorRepository.findAll();
     }
 
+    public Vendor getVendorById(String vendorId) {
+        return vendorRepository.findVendorById(vendorId);
+    }
+
     // Fetch vendors created for simulation
     public List<Vendor> getSimulationVendors(int limit) {
         List<Vendor> allVendors = vendorRepository.findAll();

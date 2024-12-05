@@ -29,6 +29,12 @@ public class VendorController {
         return vendorService.getAllVendors();
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/{vendorId}")
+    public Vendor fetchVendorById(@PathVariable String vendorId) {
+        return vendorService.getVendorById(vendorId);
+    }
+
     @GetMapping("/simulation")
     public List<Vendor> fetchSimulationVendors(@RequestParam(defaultValue = "5") int limit) {
         return vendorService.getSimulationVendors(limit);
