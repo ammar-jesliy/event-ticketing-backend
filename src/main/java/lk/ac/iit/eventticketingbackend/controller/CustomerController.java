@@ -23,6 +23,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping
     public List<Customer> fetchAllCustomers() {
         return customerService.getAllCustomers();

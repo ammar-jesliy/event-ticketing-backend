@@ -24,6 +24,7 @@ public class VendorController {
         this.vendorService = vendorService;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping
     public List<Vendor> fetchAllVendors() {
         return vendorService.getAllVendors();
