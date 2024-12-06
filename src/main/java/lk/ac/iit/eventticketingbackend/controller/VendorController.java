@@ -95,4 +95,15 @@ public class VendorController {
         Vendor updatedVendor = vendorService.updateVendorProfile(vendor);
         return ResponseEntity.ok(updatedVendor);
     }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @DeleteMapping("/{vendorId}")
+    public ResponseEntity<?> deleteVendor(@PathVariable String vendorId) {
+        try {
+            vendorService.deleteVendorById(vendorId);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Vendor Deleted Succesfully"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

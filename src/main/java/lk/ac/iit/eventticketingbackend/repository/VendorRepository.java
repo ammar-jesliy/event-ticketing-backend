@@ -10,4 +10,6 @@ public interface VendorRepository extends MongoRepository<Vendor, String> {
 
     boolean existsByEmail(String email);
 
+    void deleteVendorById(String vendorId);
+
 }

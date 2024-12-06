@@ -130,4 +130,9 @@ public class VendorService {
 
         return true;
     }
+
+    public void deleteVendorById(String vendorId) {
+        vendorRepository.deleteVendorById(vendorId);
+        transactionRepository.deleteTransactionsByVendorId(vendorId);
+    }
 }

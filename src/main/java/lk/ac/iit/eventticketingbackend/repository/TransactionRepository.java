@@ -9,4 +9,6 @@ public interface TransactionRepository extends MongoRepository<Transaction, Stri
     List<Transaction> findTransactionsByVendorId(String vendorId);
 
     List<Transaction> findTransactionsByCustomerId(String customerId);
+
+    void deleteTransactionsByVendorId(String vendorId);
 }
