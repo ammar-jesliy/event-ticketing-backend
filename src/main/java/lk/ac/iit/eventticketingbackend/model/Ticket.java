@@ -1,3 +1,21 @@
+/**
+ * Represents a ticket in the event ticketing system.
+ * This class is part of the model layer in the event-ticketing-backend application.
+ * It is used to store and manage information related to event tickets.
+ * 
+ * Attributes include:
+ * - id (unique identifier)
+ * - ticketNumber (Number given once the ticket is purchased)
+ * - eventId (The unique identifier of the event related to the ticket)
+ * - customerId (The unique identifier of the customer who purchased the ticket)
+ * - vendorId (The unique identifier of the vendor who sold the ticket)
+ * - price (The price of the ticket)
+ * - isAvailable (Boolean value indicating whether the ticket is available for 
+ * purchase)
+ * - purchasedDate (The date and time the ticket was purchased)
+ * 
+ * 
+ */
 package lk.ac.iit.eventticketingbackend.model;
 
 import org.springframework.data.annotation.Id;

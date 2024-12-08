@@ -1,3 +1,13 @@
+/**
+ * This class represents a request to buy a ticket.
+ * It is part of the Data Transfer Object (DTO) layer in the event ticketing backend system.
+ * 
+ * Attributes include:
+ * - eventId
+ * - customerId
+ * - numberOfTickets
+ * 
+ */
 package lk.ac.iit.eventticketingbackend.dto;
 
 public class TicketBuyRequest {

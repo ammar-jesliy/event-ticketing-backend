@@ -1,3 +1,20 @@
+/**
+ * This class represents a Customer in the event ticketing backend system.
+ * It is part of the model package and is used to manage customer-related data.
+ * 
+ * Attributes include:
+ * - id (unique identifier)
+ * - name 
+ * - email (unique identifier)
+ * - password
+ * - dateCreated
+ * - vipPoints (VIP points earned by the customer)
+ * 
+ * - purchaseRate (rate at which the customer purchases tickets) TRANSIENT
+ * - ticketPool (pool of tickets available for purchase) TRANSIENT
+ * - tickets (list of tickets purchased by the customer) TRANSIENT
+ * 
+ */
 package lk.ac.iit.eventticketingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,9 +23,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Document
@@ -45,6 +60,23 @@ public class Customer implements Runnable {
         this.vipPoints = 0;
     }
 
+    /**
+     * 
+     * This method is used to purchase tickets from the ticket pool.
+     * 
+     * This method is only used in the CLI simulation and is not part of the
+     * REST API.
+     * 
+     * Continuously attempts to purchase tickets from the ticket pool at a
+     * specified rate.
+     * If no tickets are left for sale, it prints a message and stops
+     * attempting to purchase tickets.
+     * 
+     * This method runs in an infinite loop until there are no tickets left or
+     * the thread is interrupted.
+     * 
+     * @throws RuntimeException if the thread is interrupted during sleep.
+     */
     @Override
     public void run() {
         while (true) {

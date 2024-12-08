@@ -1,3 +1,14 @@
+/**
+ * This class represents the configuration settings for the event ticketing backend.
+ * It is part of the model package and is used to manage various configuration parameters.
+ * 
+ * Attributes include:
+ * - maxCapacity (maximum number of tickets that can be sold)
+ * - releaseRate (rate at which tickets are released by the vendors)
+ * - retrievalRate (rate at which tickets are retrieved by the customers)
+ * 
+ * 
+ */
 package lk.ac.iit.eventticketingbackend.model;
 
 public class Configuration {

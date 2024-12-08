@@ -1,3 +1,19 @@
+/**
+ * This class represents a Vendor in the event ticketing backend system.
+ * It is part of the model package and is used to manage vendor-related data.
+ * 
+ * Attributes include:
+ * - id (unique identifier)
+ * - name 
+ * - email (unique identifier)
+ * - password
+ * - dateCreated
+ * 
+ * - releaseRate (rate at which tickets are released by the vendor) TRANSIENT
+ * - ticketPool (reference to the pool of tickets available) TRANSIENT
+ * 
+ * 
+ */
 package lk.ac.iit.eventticketingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -36,6 +52,21 @@ public class Vendor implements Runnable {
         this.releaseRate = releaseRate;
     }
 
+    /**
+     * 
+     * This method is only called in the CLI simulation.
+     * 
+     * Continuously creates and releases tickets into the ticket pool at a
+     * specified rate.
+     * Each ticket is assigned a price, vendor ID, and event ID, and is marked
+     * as available.
+     * If the ticket pool reaches its capacity, the process stops and a message
+     * is printed.
+     * The thread sleeps for a specified release rate interval between
+     * releasing tickets.
+     *
+     * @throws RuntimeException if the thread is interrupted during sleep
+     */
     @Override
     public void run() {
         while (true) {

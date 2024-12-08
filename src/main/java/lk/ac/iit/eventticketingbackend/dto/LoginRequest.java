@@ -1,3 +1,13 @@
+/**
+ * This class represents a Data Transfer Object (DTO) for login requests.
+ * It is used to encapsulate the data required for a user to log in to the system.
+ * 
+ * 
+ * Attributes include:
+ * - email
+ * - password
+ * 
+ */
 package lk.ac.iit.eventticketingbackend.dto;
 
 public class LoginRequest {

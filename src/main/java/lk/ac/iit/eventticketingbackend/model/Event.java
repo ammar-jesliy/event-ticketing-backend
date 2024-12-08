@@ -1,8 +1,25 @@
+/**
+ * This class represents an Event in the event ticketing backend system.
+ * It is part of the model package and is used to define the properties and behaviors of an event.
+ * 
+ * Attributes include:
+ * - id (unique identifier)
+ * - name (name of the event)
+ * - description (description of the event)
+ * - date (date and time of the event)
+ * - openDate (date and time when ticket sales open)
+ * - closeDate (date and time when ticket sales close)
+ * - location (venue of the event)
+ * - maxCapacity (maximum number of tickets the event can sell)
+ * - ticketPoolId (unique identifier of the ticket pool associated with the 
+ * event)
+ * 
+ * 
+ */
 package lk.ac.iit.eventticketingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;

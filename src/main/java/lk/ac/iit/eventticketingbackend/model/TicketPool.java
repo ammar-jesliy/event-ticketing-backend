@@ -1,13 +1,27 @@
+/**
+ * This class represents a pool of tickets for an event.
+ * It is part of the event ticketing backend system.
+ * 
+ * Attributes include:
+ * - id (unique identifier for the ticket pool)
+ * - eventId (unique identifier for the event associated with the ticket pool)
+ * - maxTicketCapacity (maximum number of tickets that can be added to the pool)
+ * - totalTickets (total number of tickets in the pool, sold and unsold)
+ * - ticketSold (number of tickets sold)
+ * - availableTickets (number of tickets available for sale)
+ * - tickets (list of unsold tickets in the pool)
+ * 
+ * 
+ */
+
 package lk.ac.iit.eventticketingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Document
 public class TicketPool {
@@ -16,29 +30,61 @@ public class TicketPool {
     private String id;
     private String eventId;
     private int maxTicketCapacity;
-    private int totalTickets; // The amount of tickets in the ticket pool, sold and unsold
-    private int ticketSold; // The amount of tickets sold
-    private int availableTickets; // The amount of tickets available for sale
+    private int totalTickets;
+    private int ticketSold;
+    private int availableTickets;
     private List<Ticket> tickets;
 
     public TicketPool() {
         this.tickets = Collections.synchronizedList(new ArrayList<>());
     }
 
-    // Add a ticket to the pool (Vendor's operation)
+    /**
+     * Adds a ticket to the ticket pool if the total number of tickets is less than
+     * the maximum ticket capacity.
+     * This method is synchronized to ensure thread safety.
+     * This method is used by the vendor to add tickets to the pool.
+     *
+     * @param ticket the ticket to be added to the pool
+     * @return true if the ticket was successfully added, false if the ticket pool
+     *         is at maximum capacity
+     */
     public synchronized boolean addTicket(Ticket ticket) {
         if (totalTickets < maxTicketCapacity) {
-            boolean success = tickets.add(ticket);
+            tickets.add(ticket);
             this.totalTickets++;
             this.availableTickets++;
 
-            System.out.println(Thread.currentThread().getName() + " has added a ticket to the pool. Total tickets available in the ticket pool is " + tickets.size());
+            System.out.println(Thread.currentThread().getName()
+                    + " has added a ticket to the pool. Total tickets available in the ticket pool is "
+                    + tickets.size());
             notifyAll();
             return true;
         }
         return false; // Cannot add ticket, capacity is full
     }
 
+    /**
+     * Buys a ticket for a customer from the ticket pool.
+     * This method is synchronized to ensure thread safety.
+     * This method is used by the customer to buy tickets from the pool.
+     * 
+     * This method is used only for the REST API implementation.
+     * 
+     * If no tickets are available for sale, an IllegalStateException is thrown.
+     * The ticket with the lowest price is sold first.
+     * The ticket is removed from the pool and marked as sold.
+     * The ticket is assigned to the customer and the ticket number is set.
+     * The purchased date and time is set to the current date and time.
+     * The ticket count variables are updated.
+     * A message is printed to the console indicating that a ticket has been bought.
+     * The ticket is returned to the customer.
+     * The method blocks if no tickets are available for sale.
+     *
+     * @param customerId the ID of the customer buying the ticket
+     * @return the ticket that was bought
+     * @throws IllegalStateException if no tickets are available for sale
+     */
     public synchronized Ticket buyTicket(String customerId) {
         if (ticketSold == maxTicketCapacity) {
             throw new IllegalStateException("No tickets available for sale");
@@ -64,11 +110,39 @@ public class TicketPool {
         availableTickets--;
         ticketSold++;
 
-        System.out.println(Thread.currentThread().getName() + " has bought a ticket from the pool. Total tickets available in the ticket pool is " + tickets.size());
+        System.out.println(Thread.currentThread().getName()
+                + " has bought a ticket from the pool. Total tickets available in the ticket pool is "
+                + tickets.size());
 
         return ticket;
     }
 
+    /**
+     * Removes a ticket from the ticket pool and assigns it to the specified
+     * customer.
+     * This method is synchronized to ensure thread safety.
+     * This method is used by the customer to purchase tickets from the pool.
+     * 
+     * This method is only used in the CLI simulation and is not part of the
+     * REST API.
+     * 
+     * If no tickets are available for sale, an IllegalStateException is thrown.
+     * The ticket with the lowest price is sold first.
+     * The ticket is removed from the pool and marked as sold.
+     * The ticket is assigned to the customer and the ticket number is set.
+     * The purchased date and time is set to the current date and time.
+     * The ticket count variables are updated.
+     * A message is printed to the console indicating that a ticket has been bought.
+     * The ticket is returned to the customer.
+     * The method blocks if no tickets are available for sale.
+     * 
+     *
+     * @param customerId the ID of the customer purchasing the ticket
+     * @return the ticket that was removed and assigned to the customer
+     * @throws IllegalStateException if no tickets are available for sale
+     * @throws RuntimeException      if the thread is interrupted while waiting for
+     *                               tickets
+     */
     public synchronized Ticket removeTicket(String customerId) {
         if (ticketSold == maxTicketCapacity) {
             throw new IllegalStateException("No tickets available for sale");
@@ -103,12 +177,13 @@ public class TicketPool {
         availableTickets--;
         ticketSold++;
 
-        System.out.println(Thread.currentThread().getName() + " has bought a ticket from the pool. Total tickets available in the ticket pool is " + tickets.size());
+        System.out.println(Thread.currentThread().getName()
+                + " has bought a ticket from the pool. Total tickets available in the ticket pool is "
+                + tickets.size());
         notifyAll();
 
         return ticket;
     }
-
 
     // Getters and Setters
     public String getId() {
@@ -158,7 +233,6 @@ public class TicketPool {
     public void setAvailableTickets(int availableTickets) {
         this.availableTickets = availableTickets;
     }
-
 
     public List<Ticket> getTickets() {
         return tickets;

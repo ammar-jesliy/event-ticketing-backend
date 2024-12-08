@@ -1,3 +1,15 @@
+/**
+ * This class represents a request to release tickets for an event.
+ * It is part of the Data Transfer Object (DTO) layer in the event ticketing backend system.
+ * 
+ * Attributes include:
+ * - eventId
+ * - vendorId
+ * - numberOfTickets
+ * - price
+ * 
+ * 
+ */
 package lk.ac.iit.eventticketingbackend.dto;
 
 public class TicketReleaseRequest {

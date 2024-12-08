@@ -1,3 +1,21 @@
+/**
+ * This class represents a Transaction in the event ticketing backend system.
+ * It is part of the model package and is used to manage transaction-related data.
+ * 
+ * Attributes include:
+ * - id (unique identifier)
+ * - timeStamp (time at which the transaction occurred)
+ * - ticketIds (list of ticket IDs associated with the transaction)
+ * - customerId (unique identifier of the customer involved in the transaction)
+ * - vendorId (unique identifier of the vendor involved in the transaction)
+ * - eventId (unique identifier of the event involved in the transaction)
+ * - quantity (number of tickets purchased)
+ * - pricePerTicket (price per ticket)
+ * - totalAmount (total amount of the transaction)
+ * - transactionType (type of transaction, e.g., Purchase, Release)
+ * 
+ * 
+ */
 package lk.ac.iit.eventticketingbackend.model;
 
 import org.springframework.data.annotation.Id;
