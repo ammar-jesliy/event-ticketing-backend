@@ -83,4 +83,18 @@ public class Ticket {
     public void setPurchasedDate(LocalDateTime purchasedDate) {
         this.purchasedDate = purchasedDate;
     }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id='" + id + '\'' +
+                ", ticketNumber='" + ticketNumber + '\'' +
+                ", eventId='" + eventId + '\'' +
+                ", customerId='" + customerId + '\'' +
+                ", vendorId='" + vendorId + '\'' +
+                ", price=" + price +
+                ", isAvailable=" + isAvailable +
+                ", purchasedDate=" + purchasedDate +
+                '}';
+    }
 }
