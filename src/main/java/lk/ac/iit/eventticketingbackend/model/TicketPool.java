@@ -33,6 +33,7 @@ public class TicketPool {
             this.availableTickets++;
 
             System.out.println(Thread.currentThread().getName() + " has added a ticket to the pool. Total tickets available in the ticket pool is " + tickets.size());
+            notifyAll();
             return true;
         }
         return false; // Cannot add ticket, capacity is full
@@ -73,8 +74,9 @@ public class TicketPool {
             throw new IllegalStateException("No tickets available for sale");
         }
 
-        while (availableTickets == 0) {
+        while (tickets.isEmpty()) {
             try {
+                System.out.println(Thread.currentThread().getName() + " is waiting for tickets...");
                 wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e.getMessage());
