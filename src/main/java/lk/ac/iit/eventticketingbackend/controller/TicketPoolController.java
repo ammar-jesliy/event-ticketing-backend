@@ -15,6 +15,7 @@ public class TicketPoolController {
         this.ticketPoolService = ticketPoolService;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping
     public List<TicketPool> fetchAllTicketPools() {
         return ticketPoolService.getAllTicketPools();
