@@ -101,13 +101,13 @@ public class Cli {
         System.out.println("Simulation started\n");
 
         TicketPool ticketPool = new TicketPool();
-        ticketPool.setMaxTicketCapacity(30);
+        ticketPool.setMaxTicketCapacity(configuration.getMaxCapacity());
         ticketPool.setEventId("675531d9170be813fdee43e6");
 
         Thread[] vendorThreads = new Thread[vendors.size()];
 
         for (int i = 0; i < vendors.size(); i++) {
-            vendors.get(i).setReleaseRate(2);
+            vendors.get(i).setReleaseRate(configuration.getReleaseRate());
             vendors.get(i).setTicketPool(ticketPool);
 
             Thread vendorThread = new Thread(vendors.get(i), vendors.get(i).getName());
@@ -118,7 +118,7 @@ public class Cli {
         Thread[] customerThreads = new Thread[customers.size()];
 
         for (int i = 0; i < customers.size(); i++) {
-            customers.get(i).setPurchaseRate(5);
+            customers.get(i).setPurchaseRate(configuration.getRetrievalRate());
             customers.get(i).setTicketPool(ticketPool);
 
             Thread customerThread = new Thread(customers.get(i), customers.get(i).getName());
@@ -144,6 +144,9 @@ public class Cli {
     private static void printConfiguration() {
         // TODO
         System.out.println("Configuration settings");
+        System.out.println("Max Capacity: " + configuration.getMaxCapacity());
+        System.out.println("Release Rate: " + configuration.getReleaseRate());
+        System.out.println("Retrieval Rate: " + configuration.getRetrievalRate());
     }
 
 
@@ -166,8 +169,10 @@ public class Cli {
 
         Configuration newConfiguration = new Configuration(maxCapacity, releaseRate, retrievalRate);
 
-        objectMapper.writeValue(new File("configuration.json"), newConfiguration);
+        objectMapper.writeValue(new File("src/main/resources/configuration.json"), newConfiguration);
         System.out.println("JSON file saved successfully");
+
+        configuration = newConfiguration;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -205,7 +210,7 @@ public class Cli {
 
             System.out.println("Working Directory: " + System.getProperty("user.dir"));
 
-            configuration = objectMapper.readValue(new File("configuration.json"), Configuration.class);
+            configuration = objectMapper.readValue(new File("src/main/resources/configuration.json"), Configuration.class);
 
             System.out.println(configuration);
         } catch (Exception e) {
