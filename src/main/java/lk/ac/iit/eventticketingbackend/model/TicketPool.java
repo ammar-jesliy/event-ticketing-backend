@@ -41,7 +41,39 @@ public class TicketPool {
     public synchronized Ticket buyTicket(String customerId) {
         if (ticketSold == maxTicketCapacity) {
             throw new IllegalStateException("No tickets available for sale");
-        } else if (availableTickets == 0) {
+        }
+
+        // Sort tickets by price (lowest price first)
+        tickets.sort(Comparator.comparingDouble(Ticket::getPrice));
+
+        Ticket ticket = tickets.get(0);
+
+        // Mark ticket as sold and assign it to the customer
+        ticket.setAvailable(false);
+        ticket.setCustomerId(customerId);
+
+        // Set ticket number
+        ticket.setTicketNumber("TICKET - " + ticket.getId());
+
+        // Set purchased data and time to now
+        ticket.setPurchasedDate(LocalDateTime.now());
+
+        // Remove ticket and update count variables
+        tickets.remove(0);
+        availableTickets--;
+        ticketSold++;
+
+        System.out.println(Thread.currentThread().getName() + " has bought a ticket from the pool. Total tickets available in the ticket pool is " + tickets.size());
+
+        return ticket;
+    }
+
+    public synchronized Ticket removeTicket(String customerId) {
+        if (ticketSold == maxTicketCapacity) {
+            throw new IllegalStateException("No tickets available for sale");
+        }
+
+        while (availableTickets == 0) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -70,7 +102,6 @@ public class TicketPool {
         ticketSold++;
 
         System.out.println(Thread.currentThread().getName() + " has bought a ticket from the pool. Total tickets available in the ticket pool is " + tickets.size());
-
         notifyAll();
 
         return ticket;
