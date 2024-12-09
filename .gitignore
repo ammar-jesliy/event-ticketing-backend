@@ -34,3 +34,6 @@ build/
 
 # Configuration file
 configuration.json
+
+# Log file
+application.log

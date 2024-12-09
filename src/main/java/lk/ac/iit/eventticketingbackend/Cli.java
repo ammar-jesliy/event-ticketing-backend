@@ -6,6 +6,8 @@ import lk.ac.iit.eventticketingbackend.model.Configuration;
 import lk.ac.iit.eventticketingbackend.model.Customer;
 import lk.ac.iit.eventticketingbackend.model.TicketPool;
 import lk.ac.iit.eventticketingbackend.model.Vendor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URI;
@@ -18,13 +20,15 @@ import java.util.Scanner;
 
 public class Cli {
 
+    private static final Logger logger = LoggerFactory.getLogger(Cli.class);
+
     // Lists to store customers and vendors
     private static List<Customer> customers = new ArrayList<>();
     private static List<Vendor> vendors = new ArrayList<>();
     private static Configuration configuration;
 
     public static void main(String[] args) {
-        System.out.println("Running standalone task...");
+        logger.info("Starting Event Ticketing CLI Application...");
         Scanner input = new Scanner(System.in);
 
         try {
@@ -200,8 +204,6 @@ public class Cli {
             ObjectMapper objectMapper = new ObjectMapper();
 
             configuration = objectMapper.readValue(new File("src/main/resources/configuration.json"), Configuration.class);
-
-            System.out.println(configuration);
         } catch (Exception e) {
             e.printStackTrace();
         }
