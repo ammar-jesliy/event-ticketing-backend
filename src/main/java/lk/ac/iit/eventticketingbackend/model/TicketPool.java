@@ -1,7 +1,7 @@
 /**
  * This class represents a pool of tickets for an event.
  * It is part of the event ticketing backend system.
- * 
+ * <p>
  * Attributes include:
  * - id (unique identifier for the ticket pool)
  * - eventId (unique identifier for the event associated with the ticket pool)
@@ -10,8 +10,6 @@
  * - ticketSold (number of tickets sold)
  * - availableTickets (number of tickets available for sale)
  * - tickets (list of unsold tickets in the pool)
- * 
- * 
  */
 
 package lk.ac.iit.eventticketingbackend.model;
@@ -21,6 +19,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Document
@@ -47,15 +46,21 @@ public class TicketPool {
      *
      * @param ticket the ticket to be added to the pool
      * @return true if the ticket was successfully added, false if the ticket pool
-     *         is at maximum capacity
+     * is at maximum capacity
      */
     public synchronized boolean addTicket(Ticket ticket) {
+
+        // Get current timestamp
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timestamp = now.format(formatter);
+
         if (totalTickets < maxTicketCapacity) {
             tickets.add(ticket);
             this.totalTickets++;
             this.availableTickets++;
 
-            System.out.println(Thread.currentThread().getName()
+            System.out.println(timestamp + ": " + Thread.currentThread().getName()
                     + " has added a ticket to the pool. Total tickets available in the ticket pool is "
                     + tickets.size());
             notifyAll();
@@ -68,9 +73,9 @@ public class TicketPool {
      * Buys a ticket for a customer from the ticket pool.
      * This method is synchronized to ensure thread safety.
      * This method is used by the customer to buy tickets from the pool.
-     * 
+     * <p>
      * This method is used only for the REST API implementation.
-     * 
+     * <p>
      * If no tickets are available for sale, an IllegalStateException is thrown.
      * The ticket with the lowest price is sold first.
      * The ticket is removed from the pool and marked as sold.
@@ -122,10 +127,10 @@ public class TicketPool {
      * customer.
      * This method is synchronized to ensure thread safety.
      * This method is used by the customer to purchase tickets from the pool.
-     * 
+     * <p>
      * This method is only used in the CLI simulation and is not part of the
      * REST API.
-     * 
+     * <p>
      * If no tickets are available for sale, an IllegalStateException is thrown.
      * The ticket with the lowest price is sold first.
      * The ticket is removed from the pool and marked as sold.
@@ -135,7 +140,6 @@ public class TicketPool {
      * A message is printed to the console indicating that a ticket has been bought.
      * The ticket is returned to the customer.
      * The method blocks if no tickets are available for sale.
-     * 
      *
      * @param customerId the ID of the customer purchasing the ticket
      * @return the ticket that was removed and assigned to the customer
@@ -144,13 +148,19 @@ public class TicketPool {
      *                               tickets
      */
     public synchronized Ticket removeTicket(String customerId) {
+
+        // Get current timestamp
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timestamp = now.format(formatter);
+
         if (ticketSold == maxTicketCapacity) {
             throw new IllegalStateException("No tickets available for sale");
         }
 
         while (tickets.isEmpty()) {
             try {
-                System.out.println(Thread.currentThread().getName() + " is waiting for tickets...");
+                System.out.println(timestamp + ": " + Thread.currentThread().getName() + " is waiting for tickets...");
                 wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e.getMessage());
@@ -177,7 +187,7 @@ public class TicketPool {
         availableTickets--;
         ticketSold++;
 
-        System.out.println(Thread.currentThread().getName()
+        System.out.println(timestamp + ": " + Thread.currentThread().getName()
                 + " has bought a ticket from the pool. Total tickets available in the ticket pool is "
                 + tickets.size());
         notifyAll();

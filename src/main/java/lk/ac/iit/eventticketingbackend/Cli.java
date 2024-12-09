@@ -50,7 +50,6 @@ public class Cli {
             System.out.println("\t3) Edit configuration settings");
             System.out.println("\t4) Print customer and vendor details");
             System.out.println("\t5) Print ticket pool details");
-            System.out.println("\t6) Search ticket");
             System.out.println("\t0) Quit");
             System.out.println("*********************************************************************");
 
@@ -80,8 +79,6 @@ public class Cli {
                     printUserDetails();
                 } else if (selected_option == 5) {
                     printTicketPoolDetails();
-                } else if (selected_option == 6) {
-                    searchTicket();
                 } else if (selected_option == 0) {
                     break;
                 } else {
@@ -142,7 +139,6 @@ public class Cli {
 
 
     private static void printConfiguration() {
-        // TODO
         System.out.println("Configuration settings");
         System.out.println("Max Capacity: " + configuration.getMaxCapacity());
         System.out.println("Release Rate: " + configuration.getReleaseRate());
@@ -156,23 +152,23 @@ public class Cli {
         Scanner input = new Scanner(System.in);
 
         try {
-        ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = new ObjectMapper();
 
-        System.out.print("Enter MaxCapacity: ");
-        int maxCapacity = input.nextInt();
+            System.out.print("Enter MaxCapacity: ");
+            int maxCapacity = input.nextInt();
 
-        System.out.print("Enter ReleaseRate: ");
-        int releaseRate = input.nextInt();
+            System.out.print("Enter ReleaseRate: ");
+            int releaseRate = input.nextInt();
 
-        System.out.print("Enter Retrieval Rate: ");
-        int retrievalRate = input.nextInt();
+            System.out.print("Enter Retrieval Rate: ");
+            int retrievalRate = input.nextInt();
 
-        Configuration newConfiguration = new Configuration(maxCapacity, releaseRate, retrievalRate);
+            Configuration newConfiguration = new Configuration(maxCapacity, releaseRate, retrievalRate);
 
-        objectMapper.writeValue(new File("src/main/resources/configuration.json"), newConfiguration);
-        System.out.println("JSON file saved successfully");
+            objectMapper.writeValue(new File("src/main/resources/configuration.json"), newConfiguration);
+            System.out.println("JSON file saved successfully");
 
-        configuration = newConfiguration;
+            configuration = newConfiguration;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -199,16 +195,9 @@ public class Cli {
         System.out.println("Ticket Pool Details");
     }
 
-    private static void searchTicket() {
-        // TODO
-        System.out.println("Search Tickets");
-    }
-
     private static void loadConfiguration() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-
-            System.out.println("Working Directory: " + System.getProperty("user.dir"));
 
             configuration = objectMapper.readValue(new File("src/main/resources/configuration.json"), Configuration.class);
 
