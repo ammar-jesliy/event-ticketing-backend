@@ -15,6 +15,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -32,9 +33,9 @@ public class Cli {
         Scanner input = new Scanner(System.in);
 
         try {
+            loadConfiguration();
             loadVendors();
             loadCustomers();
-            loadConfiguration();
             logger.info("Initial data successfully loaded.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,7 +57,6 @@ public class Cli {
             System.out.println("\t2) Print current configuration settings");
             System.out.println("\t3) Edit configuration settings");
             System.out.println("\t4) Print customer and vendor details");
-            System.out.println("\t5) Print ticket pool details");
             System.out.println("\t0) Quit");
             System.out.println("*********************************************************************");
 
@@ -85,8 +85,6 @@ public class Cli {
                     configure();
                 } else if (selected_option == 4) {
                     printUserDetails();
-                } else if (selected_option == 5) {
-                    printTicketPoolDetails();
                 } else if (selected_option == 0) {
                     logger.info("Exiting application.");
                     break;
@@ -169,14 +167,57 @@ public class Cli {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            System.out.print("Enter MaxCapacity: ");
-            int maxCapacity = input.nextInt();
+            int maxCapacity = 0;
+            int releaseRate = 0;
+            int retrievalRate = 0;
 
-            System.out.print("Enter ReleaseRate: ");
-            int releaseRate = input.nextInt();
+            // Handle invalid input for MaxCapacity
+            while (true) {
+                System.out.print("Enter MaxCapacity (1-500): ");
+                try {
+                    maxCapacity = input.nextInt();
+                    if (maxCapacity < 1 || maxCapacity > 500) {
+                        System.out.println("Invalid input. MaxCapacity must be between 1 and 500.");
+                    } else {
+                        break;
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a valid integer.");
+                    input.next(); // Clear the invalid input
+                }
+            }
 
-            System.out.print("Enter Retrieval Rate: ");
-            int retrievalRate = input.nextInt();
+            // Handle invalid input for ReleaseRate
+            while (true) {
+                System.out.print("Enter ReleaseRate (1-20): ");
+                try {
+                    releaseRate = input.nextInt();
+                    if (releaseRate < 1 || releaseRate > 20) {
+                        System.out.println("Invalid input. ReleaseRate must be between 1 and 20.");
+                    } else {
+                        break;
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a valid integer.");
+                    input.next(); // Clear the invalid input
+                }
+            }
+
+            // Handle invalid input for Retrieval Rate
+            while (true) {
+                System.out.print("Enter Retrieval Rate (1-20): ");
+                try {
+                    retrievalRate = input.nextInt();
+                    if (retrievalRate < 1 || retrievalRate > 20) {
+                        System.out.println("Invalid input. Retrieval Rate must be between 1 and 20.");
+                    } else {
+                        break;
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a valid integer.");
+                    input.next(); // Clear the invalid input
+                }
+            }
 
             Configuration newConfiguration = new Configuration(maxCapacity, releaseRate, retrievalRate);
 
@@ -210,11 +251,6 @@ public class Cli {
         }
     }
 
-    private static void printTicketPoolDetails() {
-        // TODO
-        System.out.println("Ticket Pool Details");
-    }
-
     private static void loadConfiguration() {
         logger.info("Loading configuration from JSON file.");
         try {
@@ -234,6 +270,10 @@ public class Cli {
         String apiUrl = "http://localhost:8080/api/v1/vendors/simulation";
         vendors = fetchListFromApi(apiUrl, new TypeReference<List<Vendor>>() {
         });
+
+        for (Vendor vendor : vendors) {
+            vendor.setReleaseRate(configuration.getReleaseRate());
+        }
     }
 
     private static void loadCustomers() throws Exception {
@@ -242,6 +282,10 @@ public class Cli {
         String apiUrl = "http://localhost:8080/api/v1/customers/simulation";
         customers = fetchListFromApi(apiUrl, new TypeReference<List<Customer>>() {
         });
+
+        for (Customer customer : customers) {
+            customer.setPurchaseRate(configuration.getRetrievalRate());
+        }
     }
 
     private static <T> List<T> fetchListFromApi(String apiUrl, TypeReference<List<T>> typeReference) throws Exception {
