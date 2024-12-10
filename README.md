@@ -353,7 +353,7 @@ This project is licensed under the MIT License.
 
 Ammar Jesliy - [ammarjc1@gmail.com](mailto:ammarjc1@email.com)
 
-Project Link: [https://github.com/ammar-jesliy/event-ticketing-backend](https://github.com/ammarjesliy/event-ticketing-backend)
+Project Link: [https://github.com/ammar-jesliy/event-ticketing-backend](https://github.com/ammar-jesliy/event-ticketing-backend)
 
 ## Acknowledgements
 
