@@ -23,6 +23,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Document
 public class Vendor implements Runnable {
@@ -71,6 +72,11 @@ public class Vendor implements Runnable {
     public void run() {
         Logger logger = LoggerFactory.getLogger(Vendor.class);
 
+        // Get current timestamp
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timestamp = now.format(formatter);
+
         while (true) {
             Ticket ticket = new Ticket();
             ticket.setPrice(100);
@@ -82,7 +88,7 @@ public class Vendor implements Runnable {
 
             if (!success) {
                 logger.warn("Ticket Pool capacity has reached. Vendor Name: {}. Cannot release any more tickets.", name);
-                System.out.println("Ticket Pool capacity has reached. Cannot release any more tickets");
+                System.out.println(timestamp + ": " + "Ticket Pool capacity has reached. Cannot release any more tickets");
                 break;
             }
 

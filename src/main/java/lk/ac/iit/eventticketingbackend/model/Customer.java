@@ -25,6 +25,8 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,12 +85,17 @@ public class Customer implements Runnable {
     public void run() {
         Logger logger = LoggerFactory.getLogger(Customer.class);
 
+        // Get current timestamp
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timestamp = now.format(formatter);
+
         while (true) {
             try {
                 tickets.add(ticketPool.removeTicket(id));
             } catch (IllegalStateException e) {
                 logger.warn("No Tickets left for sale. Customer Name: {}. Cannot purchase any more tickets.", name);
-                System.out.println("No Tickets left for sale");
+                System.out.println(timestamp + ": " + "No Tickets left for sale");
                 break;
             }
 
