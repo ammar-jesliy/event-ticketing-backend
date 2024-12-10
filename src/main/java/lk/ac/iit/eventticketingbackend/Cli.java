@@ -35,8 +35,10 @@ public class Cli {
             loadVendors();
             loadCustomers();
             loadConfiguration();
+            logger.info("Initial data successfully loaded.");
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("Error loading initial data.", e);
         }
 
         System.out.println();
@@ -46,6 +48,7 @@ public class Cli {
         System.out.println();
 
         while (true) {
+            logger.info("Displaying menu options.");
             System.out.println("*********************************************************************");
             System.out.println("*                            MENU OPTIONS                           *");
             System.out.println("*********************************************************************");
@@ -64,6 +67,7 @@ public class Cli {
             try {
                 selected_option = Integer.parseInt(input.next());
             } catch (NumberFormatException e) {
+                logger.warn("Invalid menu option selected");
                 System.out.println();
                 System.out.println("Invalid option, Try again!");
                 System.out.println();
@@ -84,11 +88,13 @@ public class Cli {
                 } else if (selected_option == 5) {
                     printTicketPoolDetails();
                 } else if (selected_option == 0) {
+                    logger.info("Exiting application.");
                     break;
                 } else {
                     System.out.println("Invalid Option, Try again!");
                 }
             } catch (Exception e) {
+                logger.error("An error occurred while processing the selected option.", e);
                 e.printStackTrace();
             }
 
@@ -98,7 +104,7 @@ public class Cli {
 
 
     private static void simulate() throws Exception {
-        // TODO
+        logger.info("Starting ticket simulation...");
         System.out.println("Simulation started\n");
 
         TicketPool ticketPool = new TicketPool();
@@ -107,6 +113,7 @@ public class Cli {
 
         Thread[] vendorThreads = new Thread[vendors.size()];
 
+        logger.debug("Initializing vendor threads...");
         for (int i = 0; i < vendors.size(); i++) {
             vendors.get(i).setReleaseRate(configuration.getReleaseRate());
             vendors.get(i).setTicketPool(ticketPool);
@@ -118,6 +125,7 @@ public class Cli {
 
         Thread[] customerThreads = new Thread[customers.size()];
 
+        logger.debug("Initializing customer threads...");
         for (int i = 0; i < customers.size(); i++) {
             customers.get(i).setPurchaseRate(configuration.getRetrievalRate());
             customers.get(i).setTicketPool(ticketPool);
@@ -135,6 +143,8 @@ public class Cli {
             thread.join(); // Wait for each thread to finish
         }
 
+        logger.info("Simulation completed. Tickets sold: {}. Available tickets: {}", ticketPool.getTicketSold(), ticketPool.getAvailableTickets());
+
         System.out.println();
         System.out.println("Total tickets in Ticket Pool: " + ticketPool.getTotalTickets());
         System.out.println("Available tickets for sale in Ticket Pool: " + ticketPool.getAvailableTickets());
@@ -143,6 +153,7 @@ public class Cli {
 
 
     private static void printConfiguration() {
+        logger.info("Displaying current configuration settings.");
         System.out.println("Configuration settings");
         System.out.println("Max Capacity: " + configuration.getMaxCapacity());
         System.out.println("Release Rate: " + configuration.getReleaseRate());
@@ -151,7 +162,7 @@ public class Cli {
 
 
     private static void configure() throws Exception {
-        // TODO
+        logger.info("Configuring application settings.");
         System.out.println("Configure");
         Scanner input = new Scanner(System.in);
 
@@ -172,15 +183,20 @@ public class Cli {
             objectMapper.writeValue(new File("src/main/resources/configuration.json"), newConfiguration);
             System.out.println("JSON file saved successfully");
 
+            logger.info("Configuration updated and saved to JSON file.");
+
             configuration = newConfiguration;
         } catch (Exception e) {
             e.printStackTrace();
+            logger.info("Error configuring settings.", e);
         }
 
     }
 
 
     private static void printUserDetails() {
+        logger.info("Printing customer and vendor details.");
+
         System.out.println("Customer Details: ");
         for (Customer customer : customers) {
             System.out.println(customer);
@@ -200,28 +216,37 @@ public class Cli {
     }
 
     private static void loadConfiguration() {
+        logger.info("Loading configuration from JSON file.");
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
             configuration = objectMapper.readValue(new File("src/main/resources/configuration.json"), Configuration.class);
+            logger.info("Configuration loaded successfully: {}", configuration);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("Error loading configuration.", e);
         }
     }
 
     private static void loadVendors() throws Exception {
+        logger.info("Fetching vendor data from Backend.");
+
         String apiUrl = "http://localhost:8080/api/v1/vendors/simulation";
         vendors = fetchListFromApi(apiUrl, new TypeReference<List<Vendor>>() {
         });
     }
 
     private static void loadCustomers() throws Exception {
+        logger.info("Fetching customer data from Backend.");
+
         String apiUrl = "http://localhost:8080/api/v1/customers/simulation";
         customers = fetchListFromApi(apiUrl, new TypeReference<List<Customer>>() {
         });
     }
 
     private static <T> List<T> fetchListFromApi(String apiUrl, TypeReference<List<T>> typeReference) throws Exception {
+        logger.debug("Sending API request to: {}", apiUrl);
+
         HttpClient httpClient = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -232,10 +257,12 @@ public class Cli {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
+            logger.debug("Successfully fetched data from API.");
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(response.body(), typeReference);
 
         } else {
+            logger.error("Failed to fetch data from API. Status code: {}", response.statusCode());
             System.out.println("Failed to fetch data from API. Http status code: " + response.statusCode());
             return new ArrayList<>();
         }
