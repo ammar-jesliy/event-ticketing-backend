@@ -1,4 +1,5 @@
 <configuration>
+    <!-- Define the FILE appender for application logs -->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>application.log</file>
         <append>true</append>
@@ -7,7 +8,20 @@
         </encoder>
     </appender>
 
-    <root level="debug">
+    <!-- Define the CONSOLE appender for default Spring Boot logging -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Custom application logs: Write to file and console -->
+    <logger name="lk.ac.iit.eventticketingbackend" level="DEBUG" additivity="false">
         <appender-ref ref="FILE" />
+    </logger>
+
+    <!-- Root logger for default Spring Boot console logging -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
     </root>
 </configuration>
