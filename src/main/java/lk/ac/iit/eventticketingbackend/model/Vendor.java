@@ -17,6 +17,8 @@
 package lk.ac.iit.eventticketingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -69,6 +71,8 @@ public class Vendor implements Runnable {
      */
     @Override
     public void run() {
+        Logger logger = LoggerFactory.getLogger(Vendor.class);
+
         while (true) {
             Ticket ticket = new Ticket();
             ticket.setPrice(100);
@@ -79,6 +83,7 @@ public class Vendor implements Runnable {
             boolean success = ticketPool.addTicket(ticket);
 
             if (!success) {
+                logger.warn("Ticket Pool capacity has reached. Vendor Name: {}. Cannot release any more tickets.", name);
                 System.out.println("Ticket Pool capacity has reached. Cannot release any more tickets");
                 break;
             }
@@ -86,6 +91,7 @@ public class Vendor implements Runnable {
             try {
                 Thread.sleep(releaseRate * 1000);
             } catch (InterruptedException e) {
+                logger.error("Vendor Name: {} was interrupted while releasing tickets: {}", name, e.getMessage(), e);
                 throw new RuntimeException(e.getMessage());
             }
         }

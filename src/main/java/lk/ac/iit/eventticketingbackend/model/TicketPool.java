@@ -15,7 +15,10 @@
 package lk.ac.iit.eventticketingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -49,6 +52,7 @@ public class TicketPool {
      * is at maximum capacity
      */
     public synchronized boolean addTicket(Ticket ticket) {
+        Logger logger = LoggerFactory.getLogger(TicketPool.class);
 
         // Get current timestamp
         LocalDateTime now = LocalDateTime.now();
@@ -60,12 +64,16 @@ public class TicketPool {
             this.totalTickets++;
             this.availableTickets++;
 
+            logger.info("{} has added a ticket to the pool. Total tickets available in the ticket pool: {}",
+                    Thread.currentThread().getName(), tickets.size());
+
             System.out.println(timestamp + ": " + Thread.currentThread().getName()
                     + " has added a ticket to the pool. Total tickets available in the ticket pool is "
                     + tickets.size());
             notifyAll();
             return true;
         }
+        logger.warn("{} tried to add a ticket, but the pool capacity is full.", Thread.currentThread().getName());
         return false; // Cannot add ticket, capacity is full
     }
 
@@ -91,7 +99,10 @@ public class TicketPool {
      * @throws IllegalStateException if no tickets are available for sale
      */
     public synchronized Ticket buyTicket(String customerId) {
+        Logger logger = LoggerFactory.getLogger(TicketPool.class);
+
         if (ticketSold == maxTicketCapacity) {
+            logger.warn("No tickets available for sale. Max ticket capacity reached.");
             throw new IllegalStateException("No tickets available for sale");
         }
 
@@ -114,6 +125,10 @@ public class TicketPool {
         tickets.remove(0);
         availableTickets--;
         ticketSold++;
+
+        logger.info("{} has bought a ticket from the pool. Total tickets available in the pool: {}",
+                Thread.currentThread().getName(), tickets.size());
+
 
         System.out.println(Thread.currentThread().getName()
                 + " has bought a ticket from the pool. Total tickets available in the ticket pool is "
@@ -149,20 +164,27 @@ public class TicketPool {
      */
     public synchronized Ticket removeTicket(String customerId) {
 
+        Logger logger = LoggerFactory.getLogger(TicketPool.class);
+
+
         // Get current timestamp
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String timestamp = now.format(formatter);
 
         if (ticketSold == maxTicketCapacity) {
+            logger.warn("No tickets available for sale. All tickets have been sold.");
             throw new IllegalStateException("No tickets available for sale");
         }
 
         while (tickets.isEmpty()) {
             try {
+                logger.info("{} is waiting for tickets...", Thread.currentThread().getName());
                 System.out.println(timestamp + ": " + Thread.currentThread().getName() + " is waiting for tickets...");
                 wait();
             } catch (InterruptedException e) {
+                logger.error("Thread {} was interrupted while waiting for tickets: {}",
+                        Thread.currentThread().getName(), e.getMessage(), e);
                 throw new RuntimeException(e.getMessage());
             }
         }
@@ -186,6 +208,9 @@ public class TicketPool {
         tickets.remove(0);
         availableTickets--;
         ticketSold++;
+
+        logger.info("{} has bought a ticket from the pool. Total tickets available in the pool: {}",
+                Thread.currentThread().getName(), tickets.size());
 
         System.out.println(timestamp + ": " + Thread.currentThread().getName()
                 + " has bought a ticket from the pool. Total tickets available in the ticket pool is "

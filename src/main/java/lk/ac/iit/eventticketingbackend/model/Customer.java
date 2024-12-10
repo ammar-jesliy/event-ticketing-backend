@@ -18,6 +18,8 @@
 package lk.ac.iit.eventticketingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -79,10 +81,13 @@ public class Customer implements Runnable {
      */
     @Override
     public void run() {
+        Logger logger = LoggerFactory.getLogger(Customer.class);
+
         while (true) {
             try {
                 tickets.add(ticketPool.removeTicket(id));
             } catch (IllegalStateException e) {
+                logger.warn("No Tickets left for sale. Customer Name: {}. Cannot purchase any more tickets.", name);
                 System.out.println("No Tickets left for sale");
                 break;
             }
@@ -90,6 +95,7 @@ public class Customer implements Runnable {
             try {
                 Thread.sleep(purchaseRate * 1000);
             } catch (InterruptedException e) {
+                logger.error("Customer Name: {} was interrupted while releasing tickets: {}", name, e.getMessage(), e);
                 throw new RuntimeException(e.getMessage());
             }
         }
