@@ -6,6 +6,8 @@ This is the backend service for the Event Ticketing application. It provides API
 
 ## Table of Contents
 
+- [Project Overview](#project-overview)
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [API Routes](#api-routes)
   - [VendorController](#vendorcontroller-apiv1vendors)
@@ -23,6 +25,26 @@ This is the backend service for the Event Ticketing application. It provides API
 - [Acknowledgements](#acknowledgements)
 
 ---
+
+## Project Overview
+
+The Event Ticketing Backend is a RESTful API service designed to manage events, tickets, and users for an event ticketing application. It provides endpoints for vendors and customers to interact with the system, allowing for operations such as event creation, ticket purchasing, and user management.
+
+---
+
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- **Java Development Kit (JDK) 11** or later installed.
+- **Maven** installed for managing project dependencies.
+- **Docker** and **Docker Compose** installed for containerization.
+- **MongoDB** running locally or accessible remotely.
+- An IDE or text editor of your choice (e.g., IntelliJ IDEA, VS Code).
+- Basic knowledge of Spring Boot and RESTful APIs.
+- A GitHub account to clone the repository.
+- Internet connection to download dependencies and Docker images.
+- Basic understanding of Docker and containerization concepts.
 
 ## Installation
 
