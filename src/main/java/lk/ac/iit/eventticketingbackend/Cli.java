@@ -1,3 +1,30 @@
+/**
+ * The Cli class provides a command-line interface for the Event Ticketing Application.
+ * It allows users to simulate ticket buying and selling, view and edit 
+ * configuration settings, and print customer and vendor details.
+ * <p>
+ * The class includes methods to load initial data, display menu options, 
+ * handle user input, and perform various operations based on the selected menu 
+ * option.
+ * <p>
+ * Methods:
+ * - main(String[] args): The main method that starts the CLI application and 
+ * handles user input.
+ * - simulate(): Simulates multiple users buying and selling tickets.
+ * - printConfiguration(): Prints the current configuration settings.
+ * - configure(): Allows the user to edit configuration settings.
+ * - printUserDetails(): Prints the details of customers and vendors.
+ * - loadConfiguration(): Loads configuration settings from a JSON file.
+ * - loadVendors(): Fetches vendor data from the backend.
+ * - loadCustomers(): Fetches customer data from the backend.
+ * - fetchListFromApi(String apiUrl, TypeReference<List<T>> typeReference): 
+ * Sends an API request to fetch data and returns a list of the specified type.
+ * <p>
+ * The class uses the SLF4J logging framework to log information, warnings, and 
+ * errors.
+ * It also uses the Jackson library to handle JSON serialization and 
+ * deserialization.
+ */
 package lk.ac.iit.eventticketingbackend;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -105,7 +132,15 @@ public class Cli {
         }
     }
 
-
+    /**
+     * Simulates the ticket selling process by initializing and starting vendor and
+     * customer threads.
+     * Each vendor releases tickets to the pool, and each customer attempts to
+     * purchase tickets from the pool.
+     * The simulation waits for all threads to complete before logging the results.
+     *
+     * @throws Exception if any thread is interrupted while waiting for completion.
+     */
     private static void simulate() throws Exception {
         logger.info("Starting ticket simulation...");
         System.out.println("Simulation started\n");
@@ -146,7 +181,8 @@ public class Cli {
             thread.join(); // Wait for each thread to finish
         }
 
-        logger.info("Simulation completed. Tickets sold: {}. Available tickets: {}", ticketPool.getTicketSold(), ticketPool.getAvailableTickets());
+        logger.info("Simulation completed. Tickets sold: {}. Available tickets: {}", ticketPool.getTicketSold(),
+                ticketPool.getAvailableTickets());
 
         System.out.println();
         System.out.println("Total tickets in Ticket Pool: " + ticketPool.getTotalTickets());
@@ -154,7 +190,11 @@ public class Cli {
         System.out.println("Number of tickets sold: " + ticketPool.getTicketSold());
     }
 
-
+    /**
+     * Prints the current configuration settings to the console.
+     * This includes the maximum capacity, release rate, and retrieval rate.
+     * Logs an informational message before displaying the settings.
+     */
     private static void printConfiguration() {
         logger.info("Displaying current configuration settings.");
         System.out.println("Configuration settings");
@@ -164,7 +204,16 @@ public class Cli {
         System.out.println("Retrieval Rate: " + configuration.getRetrievalRate());
     }
 
-
+    /**
+     * Configures the application settings by prompting the user for input
+     * values.
+     * The method ensures that the input values are within specified ranges and
+     * handles invalid inputs.
+     * The configuration is then saved to a JSON file.
+     *
+     * @throws Exception if an error occurs during configuration or file
+     *                   operations.
+     */
     private static void configure() throws Exception {
         logger.info("Configuring application settings.");
         System.out.println("Configure");
@@ -247,7 +296,15 @@ public class Cli {
 
     }
 
-
+    /**
+     * Prints the details of all customers and vendors to the console.
+     * This method logs the action of printing details and then iterates
+     * through the lists of customers and vendors, printing each one.
+     * 
+     * It first prints a header for customer details, followed by each
+     * customer object. Then it prints a header for vendor details,
+     * followed by each vendor object.
+     */
     private static void printUserDetails() {
         logger.info("Printing customer and vendor details.");
 
@@ -266,12 +323,23 @@ public class Cli {
         }
     }
 
+    /**
+     * Loads the configuration from a JSON file located at "src/main/resources/
+     * configuration.json".
+     * This method uses the Jackson ObjectMapper to read the JSON file and map
+     * its contents to a Configuration object.
+     * If the configuration is loaded successfully, a log message is generated
+     * with the loaded configuration.
+     * If an error occurs during the loading process, the stack trace is
+     * printed and an error log message is generated.
+     */
     private static void loadConfiguration() {
         logger.info("Loading configuration from JSON file.");
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            configuration = objectMapper.readValue(new File("src/main/resources/configuration.json"), Configuration.class);
+            configuration = objectMapper.readValue(new File("src/main/resources/configuration.json"),
+                    Configuration.class);
             logger.info("Configuration loaded successfully: {}", configuration);
         } catch (Exception e) {
             e.printStackTrace();
@@ -279,6 +347,13 @@ public class Cli {
         }
     }
 
+    /**
+     * Loads vendor data from the backend API and sets the release rate for each
+     * vendor.
+     *
+     * @throws Exception if there is an error fetching the vendor data from the
+     *                   API.
+     */
     private static void loadVendors() throws Exception {
         logger.info("Fetching vendor data from Backend.");
 
@@ -291,6 +366,12 @@ public class Cli {
         }
     }
 
+    /**
+     * Loads customer data from the backend API and sets the purchase rate for
+     * each customer.
+     * 
+     * @throws Exception if there is an error while fetching the customer data.
+     */
     private static void loadCustomers() throws Exception {
         logger.info("Fetching customer data from Backend.");
 
@@ -303,6 +384,16 @@ public class Cli {
         }
     }
 
+    /**
+     * Fetches a list of objects from the specified API URL.
+     *
+     * @param <T>           the type of objects in the list
+     * @param apiUrl        the URL of the API endpoint to fetch data from
+     * @param typeReference a reference to the type of the list to be returned
+     * @return a list of objects of type T fetched from the API
+     * @throws Exception if an error occurs during the API request or
+     *                   response processing
+     */
     private static <T> List<T> fetchListFromApi(String apiUrl, TypeReference<List<T>> typeReference) throws Exception {
         logger.debug("Sending API request to: {}", apiUrl);
 
@@ -328,5 +419,3 @@ public class Cli {
     }
 
 }
-
-
