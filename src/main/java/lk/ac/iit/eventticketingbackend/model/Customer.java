@@ -191,18 +191,19 @@ public class Customer implements Runnable {
 
     @Override
     public String toString() {
-        return "Customer{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", dateCreated='" + dateCreated + '\'' +
-                ", vipPoints=" + vipPoints +
-                ", discountRate=" + discountRate +
-                ", purchaseRate=" + purchaseRate +
-                ", ticketPool=" + ticketPool +
-                ", amount=" + amount +
-                ", tickets=" + tickets +
-                '}';
+        return String.format(
+                """
+                        Customer {
+                          id: '%s',
+                          name: '%s',
+                          email: '%s',
+                          password: '%s',
+                          dateCreated: '%s',
+                          vipPoints: %d,
+                          purchaseRate: %d,
+                          tickets: %s
+                        }""",
+                id, name, email, password, dateCreated, vipPoints, purchaseRate, tickets
+        );
     }
 }

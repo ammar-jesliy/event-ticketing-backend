@@ -1,18 +1,16 @@
 /**
  * This class represents a Vendor in the event ticketing backend system.
  * It is part of the model package and is used to manage vendor-related data.
- * 
+ * <p>
  * Attributes include:
  * - id (unique identifier)
- * - name 
+ * - name
  * - email (unique identifier)
  * - password
  * - dateCreated
- * 
+ * <p>
  * - releaseRate (rate at which tickets are released by the vendor) TRANSIENT
  * - ticketPool (reference to the pool of tickets available) TRANSIENT
- * 
- * 
  */
 package lk.ac.iit.eventticketingbackend.model;
 
@@ -55,9 +53,9 @@ public class Vendor implements Runnable {
     }
 
     /**
-     * 
+     *
      * This method is only called in the CLI simulation.
-     * 
+     *
      * Continuously creates and releases tickets into the ticket pool at a
      * specified rate.
      * Each ticket is assigned a price, vendor ID, and event ID, and is marked
@@ -163,12 +161,16 @@ public class Vendor implements Runnable {
 
     @Override
     public String toString() {
-        return "Vendor{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", releaseRate=" + releaseRate +
-                '}';
+        return String.format(
+                """
+                        Vendor {
+                          id: '%s',
+                          name: '%s',
+                          email: '%s',
+                          password: '%s',
+                          releaseRate: %s
+                        }""",
+                id, name, email, password, releaseRate
+        );
     }
 }
