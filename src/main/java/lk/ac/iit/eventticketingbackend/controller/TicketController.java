@@ -46,7 +46,7 @@ public class TicketController {
      */
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/vendor/{vendorId}")
-    public ResponseEntity<?> getVendorTransactions(@PathVariable String vendorId) {
+    public ResponseEntity<?> getVendorTickets(@PathVariable String vendorId) {
         try {
             List<Ticket> tickets = ticketService.getVendorTickets(vendorId);
 
