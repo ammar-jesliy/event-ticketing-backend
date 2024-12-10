@@ -78,14 +78,19 @@ public class Cli {
 
             try {
                 if (selected_option == 1) {
+                    logger.info("User selected option 1: Simulate.");
                     simulate();
                 } else if (selected_option == 2) {
+                    logger.info("User selected option 2: Print Configuration.");
                     printConfiguration();
                 } else if (selected_option == 3) {
+                    logger.info("User selected option 3: Edit Configuration.");
                     configure();
                 } else if (selected_option == 4) {
+                    logger.info("User selected option 4: Print Customer and Vendor Details.");
                     printUserDetails();
                 } else if (selected_option == 0) {
+                    logger.info("User selected option 0: Exit.");
                     logger.info("Exiting application.");
                     break;
                 } else {
@@ -153,6 +158,7 @@ public class Cli {
     private static void printConfiguration() {
         logger.info("Displaying current configuration settings.");
         System.out.println("Configuration settings");
+        System.out.println();
         System.out.println("Max Capacity: " + configuration.getMaxCapacity());
         System.out.println("Release Rate: " + configuration.getReleaseRate());
         System.out.println("Retrieval Rate: " + configuration.getRetrievalRate());
@@ -162,6 +168,7 @@ public class Cli {
     private static void configure() throws Exception {
         logger.info("Configuring application settings.");
         System.out.println("Configure");
+        System.out.println();
         Scanner input = new Scanner(System.in);
 
         try {
@@ -187,6 +194,8 @@ public class Cli {
                 }
             }
 
+            System.out.println();
+
             // Handle invalid input for ReleaseRate
             while (true) {
                 System.out.print("Enter ReleaseRate (1-20): ");
@@ -202,6 +211,8 @@ public class Cli {
                     input.next(); // Clear the invalid input
                 }
             }
+
+            System.out.println();
 
             // Handle invalid input for Retrieval Rate
             while (true) {
@@ -219,12 +230,14 @@ public class Cli {
                 }
             }
 
+            System.out.println();
+
             Configuration newConfiguration = new Configuration(maxCapacity, releaseRate, retrievalRate);
 
             objectMapper.writeValue(new File("src/main/resources/configuration.json"), newConfiguration);
             System.out.println("JSON file saved successfully");
 
-            logger.info("Configuration updated and saved to JSON file.");
+            logger.info("Configuration updated and saved to JSON file: {}", newConfiguration);
 
             configuration = newConfiguration;
         } catch (Exception e) {
@@ -239,6 +252,7 @@ public class Cli {
         logger.info("Printing customer and vendor details.");
 
         System.out.println("Customer Details: ");
+        System.out.println();
         for (Customer customer : customers) {
             System.out.println(customer);
         }
@@ -246,6 +260,7 @@ public class Cli {
         System.out.println();
 
         System.out.println("Vendor Details: ");
+        System.out.println();
         for (Vendor vendor : vendors) {
             System.out.println(vendor);
         }
