@@ -159,6 +159,18 @@ public class CustomerService {
      */
     public List<Ticket> buyTicket(String eventId, String customerId, int numberOfTickets) {
         TicketPool ticketPool = ticketPoolRepository.findTicketPoolByEventId(eventId);
+        Customer customer = customerRepository.findCustomerById(customerId);
+
+        int customerVipPoints = customer.getVipPoints();
+        int discountRate = 0;
+
+        if (customerVipPoints > 300) {
+            discountRate = 30;
+        } else if (customerVipPoints > 200) {
+            discountRate = 20;
+        } else if (customerVipPoints > 100) {
+            discountRate = 10;
+        }
 
         if (ticketPool == null) {
             throw new IllegalArgumentException("Event not found");
@@ -177,6 +189,8 @@ public class CustomerService {
         for (int i = 0; i < numberOfTickets; i++) {
             Ticket soldTicket = ticketPool.buyTicket(customerId);
 
+            soldTicket.setPrice(soldTicket.getPrice() * ((double) (100 - discountRate) / 100));
+
             ticketRepository.save(soldTicket);
 
             soldTickets.add(soldTicket);
@@ -187,6 +201,8 @@ public class CustomerService {
 
         // Save the update Ticket pool
         ticketPoolRepository.save(ticketPool);
+
+
 
         // Process Transactions for each vendor
         for (Map.Entry<String, List<Ticket>> entry : ticketsByVendor.entrySet()) {
@@ -218,6 +234,10 @@ public class CustomerService {
             transactionRepository.save(transaction);
 
         }
+
+        // Add vip points to the customer
+        customer.setVipPoints(customer.getVipPoints() + (10 * numberOfTickets));
+        customerRepository.save(customer);
 
         return soldTickets;
 
