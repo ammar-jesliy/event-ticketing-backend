@@ -1,14 +1,14 @@
 /**
  * The Cli class provides a command-line interface for the Event Ticketing Application.
- * It allows users to simulate ticket buying and selling, view and edit 
+ * It allows users to simulate ticket buying and selling, view and edit
  * configuration settings, and print customer and vendor details.
  * <p>
- * The class includes methods to load initial data, display menu options, 
- * handle user input, and perform various operations based on the selected menu 
+ * The class includes methods to load initial data, display menu options,
+ * handle user input, and perform various operations based on the selected menu
  * option.
  * <p>
  * Methods:
- * - main(String[] args): The main method that starts the CLI application and 
+ * - main(String[] args): The main method that starts the CLI application and
  * handles user input.
  * - simulate(): Simulates multiple users buying and selling tickets.
  * - printConfiguration(): Prints the current configuration settings.
@@ -17,12 +17,12 @@
  * - loadConfiguration(): Loads configuration settings from a JSON file.
  * - loadVendors(): Fetches vendor data from the backend.
  * - loadCustomers(): Fetches customer data from the backend.
- * - fetchListFromApi(String apiUrl, TypeReference<List<T>> typeReference): 
+ * - fetchListFromApi(String apiUrl, TypeReference<List<T>> typeReference):
  * Sends an API request to fetch data and returns a list of the specified type.
  * <p>
- * The class uses the SLF4J logging framework to log information, warnings, and 
+ * The class uses the SLF4J logging framework to log information, warnings, and
  * errors.
- * It also uses the Jackson library to handle JSON serialization and 
+ * It also uses the Jackson library to handle JSON serialization and
  * deserialization.
  */
 package lk.ac.iit.eventticketingbackend;
@@ -289,6 +289,15 @@ public class Cli {
             logger.info("Configuration updated and saved to JSON file: {}", newConfiguration);
 
             configuration = newConfiguration;
+
+            for (Vendor vendor : vendors) {
+                vendor.setReleaseRate(configuration.getReleaseRate());
+            }
+
+            for (Customer customer : customers) {
+                customer.setPurchaseRate(configuration.getRetrievalRate());
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("Error configuring settings.", e);
@@ -300,7 +309,7 @@ public class Cli {
      * Prints the details of all customers and vendors to the console.
      * This method logs the action of printing details and then iterates
      * through the lists of customers and vendors, printing each one.
-     * 
+     *
      * It first prints a header for customer details, followed by each
      * customer object. Then it prints a header for vendor details,
      * followed by each vendor object.
@@ -369,7 +378,7 @@ public class Cli {
     /**
      * Loads customer data from the backend API and sets the purchase rate for
      * each customer.
-     * 
+     *
      * @throws Exception if there is an error while fetching the customer data.
      */
     private static void loadCustomers() throws Exception {
